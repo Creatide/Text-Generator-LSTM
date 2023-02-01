@@ -1,2 +1,2 @@
-# RefAiLyr
-Reference AI Lyrics
+# LYYRI
+Reference based AI Lyrics
