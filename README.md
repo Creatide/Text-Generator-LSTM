@@ -10,7 +10,7 @@ In addition, the script provides the flexibility to select custom parameters suc
 
 # Install
 
-**1. (Optional) Install WSL, Ubuntu and Anaconda**
+**1. (Optional, Windows) Install WSL, Ubuntu and Anaconda**
 ```
 wsl --install
 wsl --install Ubuntu
@@ -46,11 +46,10 @@ Now it should workd by running commands using terminal
 python main.py <COMMANDS>
 ```
 
-## Install 
-
 # Usage
 
-# Data Scraping
+# Data Crawling Tips
+So now you have Text Generator running and you need data for training? Here is couple tips and scripts that can help you to collect some lyrics and download free books.
 
 # Licence
 
