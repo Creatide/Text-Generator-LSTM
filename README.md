@@ -46,7 +46,47 @@ Now it should workd by running commands using terminal
 python main.py <COMMANDS>
 ```
 
-# Usage
+# Commands
+You can use this script with terminal commands. Here is couple examples how to use those:
+
+Train (-t) model and save it to folder "data/models" using name -(m) MyModelName.h5. Then we use only these artists and custom genre for training data (-i).
+```
+python main.py -t -m MyModelName -i "Alice in Chains, Nirvana, grunge"
+```
+
+Generate texts (-g) using model named (-m) MyModelName. Generated text length (-l) will be 400 characters and we will generate 10 pieces (-c) of different texts.
+```
+python main.py -g -m MyModelName -l 400 -c 10
+```
+
+
+## Train Commands
+
+| Command             | Arguments            | Description                                                  |
+| ------------------- | -------------------- | ------------------------------------------------------------ |
+| **-t** / --train    | -               | Train                                                        |
+| **-e** / --evaluate | -               | Evaluate Training mode. This mode is for testing how training evaluates while it shows results with different temperatures after each epoch run. |
+| **-i** / --items    | "Nirvana, Metallica" | List of items that wanted to use for training                |
+| **-m** / --model    | "ModelName"          | Model name that will be used for saving model in training process. Extension not needed for default .h5 models. |
+
+## Generate Commands
+
+| Command             | Arguments     | Description                                                  |
+| ------------------- | ------------- | ------------------------------------------------------------ |
+| **-g** / --generate | -        | Generate text using trained models. You need to train or have existing model, in "data/models" folder. |
+| **-m** / --model    | "ModelName"   | Model that wanted to use in generation process.              |
+| **-p** / --primer   | "Hello World" | Primer text for generating process. Every generated text begins with this and neural network continue based on that. |
+| **-l** / --length   | Integer       | Length of generated text in characters.                      |
+| **-c** / --count    | Integer       | Count of how many texts will be generated. If text "MERGE_RESULTS" is on, then it will be text blocks on that generated document. |
+
+## General Commands
+
+| Command            | Arguments                             | Description                                              |
+| ------------------ | ------------------------------------- | -------------------------------------------------------- |
+| **-o** / --options | e.g.: "epochs=10, learning_rate=0.01" | All possible arguments that is in use in main.py script. |
+| **-v** / --version | -                                | Show versions of installed python, numpy and keras.      |
+
+
 
 # Data Crawling Tips
 So now you have Text Generator running and you need data for training? Here is couple tips and scripts that can help you to collect some lyrics and download free books.
