@@ -92,9 +92,24 @@ python main.py -g -m MyModelName -l 400 -c 10
 | **-v** / --version | -                                | Show versions of installed python, numpy and keras.      |
 
 
-
-# Data Crawling Tips
+# Data Crawling & Links
 So now you have Text Generator running and you need data for training? Here is couple tips and scripts that can help you to collect some lyrics and download free books.
+
+## Data Crawling
+
+* [LyricsGenius](https://lyricsgenius.readthedocs.io/en/master/): a Python client for the Genius.com API.
+  * Great tool to get all lyrics of chosen artist. 
+  * There is good [guide how to use it easily](https://lyricsgenius.readthedocs.io/en/master/setup.html).
+  * I created a [script](https://pastebin.com/kRsaLeJU) that prepares downloaded lyrics to .txt format and cleans un-wanted words and symbols from it.
+
+* [Azapi](https://github.com/elmoiv/azapi): A fast and secure API for AZLyrics.com to get lyrics easily.
+  * Another tool to download lyrics, but from AZLyrics.com.
+  * I created a [script](https://pastebin.com/YPLRB2Wz) that downloads all of chosen artist lyrics.
+  * Unfortunately, AZLyrics.com may sometimes ban your IP if you download too many lyrics from there, (that's the reason why there is randomized wait times in the script).
+
+## Free Books
+
+* [Project Gutenberg](https://www.gutenberg.org/) is a library of over 60,000 free eBooks. There you can download books in .txt format also for training.
 
 # Licence
 
