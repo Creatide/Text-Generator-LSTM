@@ -67,5 +67,7 @@ MONITOR_METRIC = 'val_loss'
 LOSS_FUNCTION = 'categorical_crossentropy'
 # Applies an activation function to an output.
 ACTIVATION_LAYER = 'softmax'
+# Save training debug data to debug folder
+USE_DEBUG = False
 # Evaluate training mode temperatures that will be used for generation phase
 EVALUATE_TEMPERATURES = [0.5, 0.8, 1.0]

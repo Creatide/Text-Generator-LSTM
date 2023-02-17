@@ -61,6 +61,7 @@ class TextGenerator:
         self.texts_length = int(self.arguments['texts_length']) if isinstance(int(self.arguments['texts_length']), int) else c.GENERATE_TEXT_LENGTH
         self.texts_count = int(self.arguments['texts_count']) if isinstance(int(self.arguments['texts_count']), int) else c.GENERATE_TEXTS_COUNT
         self.process_id = datetime.datetime.now().strftime('%m%d%Y%H%M%S%f')
+        self.debug = self.arguments['debug']
 
         self.data_folder_path = self.get_data_folder_path()
         self.data_folder_json = self.cra_data_folder_json()
@@ -300,9 +301,13 @@ class TextGenerator:
             keras.callbacks.EarlyStopping(monitor=self.arguments['monitor_metric'], patience=self.arguments['train_patience'], verbose=1, restore_best_weights=True),
             keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=round(self.arguments['train_patience'] / 2), min_lr=0.001),
             keras.callbacks.ModelCheckpoint(filepath=str(checkpoint_filepath) + '_{epoch:02d}-{loss:.2f}' + self.arguments['model']['extension'], save_best_only=True),
-            # https://www.tensorflow.org/tensorboard/get_started
-            keras.callbacks.TensorBoard(log_dir='./' + c.PATH_DEBUG_FOLDER),            
-        ]        
+            
+        ]
+        
+        # https://www.tensorflow.org/tensorboard/get_started
+        if self.arguments['debug']:
+            model_callback.append(keras.callbacks.TensorBoard(log_dir='./' + c.PATH_DEBUG_FOLDER))
+        
         return model_callback
     
     
@@ -726,10 +731,10 @@ def main():
         # Train Argumantes
         'train': False,
         'evaluate': False,
-        'checkpoints': c.USE_CHECKPOINTS,
         'model': c.DEFAULT_MODEL_FILENAME,
         'items': ['all'],        
         'sequence_length': c.SEQUENCE_LENGTH,
+        'checkpoints': c.USE_CHECKPOINTS,
         'step_size': c.STEP_SIZE,
         'batch_size': c.BATCH_SIZE,
         'epochs': c.EPOCHS,
@@ -743,6 +748,7 @@ def main():
         'monitor_metric': c.MONITOR_METRIC,
         'train_patience': c.TRAIN_PATIENCE,
         'activation_layer': c.ACTIVATION_LAYER,
+        'debug': c.USE_DEBUG,
         'options': [],
     }
     
