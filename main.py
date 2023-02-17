@@ -753,7 +753,7 @@ def main():
     }
     
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'gtep:t:c:i:m:o:v', ['generate', 'train', 'evaluate', 'primer=', 'texts_length=', 'texts_count=', 'items=', 'model=', 'options=', 'version'])
+        opts, args = getopt.getopt(sys.argv[1:], 'gtep:l:t:c:i:m:o:v', ['generate', 'train', 'evaluate', 'primer=', 'texts_length=', 'texts_count=', 'items=', 'model=', 'options=', 'version'])
         
     except getopt.GetoptError as e:
         print('ERROR: ', str(e))
