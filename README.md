@@ -2,7 +2,6 @@
 
 ![Training Process Example](https://i.imgur.com/8M5pIty.gif)
 
-
 The Text Generator LSTM is a Python script that uses Keras' LSTM to train and generate new text based on the style of the provided reference texts.
 
 ## About
@@ -50,6 +49,9 @@ python main.py <COMMANDS>
 ```
 
 # Commands
+
+![Generate Process Example](https://i.imgur.com/Aio64f6.gif)
+
 You can use this script with terminal commands. Here is couple examples how to use those:
 
 Train (-t) model and save it to folder "data/models" using name -(m) MyModelName.h5. Then we use only these artists and custom genre for training data (-i).
