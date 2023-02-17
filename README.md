@@ -1,5 +1,8 @@
 # Text Generator LSTM
 
+![Training Process Example](https://i.imgur.com/8M5pIty.gif)
+
+
 The Text Generator LSTM is a Python script that uses Keras' LSTM to train and generate new text based on the style of the provided reference texts.
 
 ## About
