@@ -116,6 +116,7 @@ So now you have Text Generator running and you need data for training? Here is c
 * **19.02.2023**
   * Added support for [spellchecker](https://pypi.org/project/pyspellchecker). By default it's work for english, but there is also support for English - ‘en’, Spanish - ‘es’, French - ‘fr’, Portuguese - ‘pt’, German - ‘de’, Russian - ‘ru’, Arabic - ‘ar’.
   * Spellchecking checks generated words and try to get the one "most likely" answer. Tested and seems to work for my lyrics quite nicely.
+  * If english frequency list is not good, there could be possible to add new list like this one: https://github.com/dwyl/english-words
 
 # Licence
 
