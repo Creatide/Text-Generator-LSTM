@@ -25,6 +25,8 @@ MERGE_RESULTS = True
 TEXT_FORMATTING = True
 # Level of randomness in the generated output. "Higher = creative, lower = safe pick".
 TEMPERATURE = 0.6
+# Use spellchecker for English by default. Supported languages: https://pyspellchecker.readthedocs.io
+USE_SPELLCHECKER = True
 
 # TRAINING
 # ------------------------------------------------------------------------------------------------ #
@@ -38,7 +40,7 @@ BATCH_SIZE = 128
 # The number of iterations over the entire training data set.
 EPOCHS = 1000
 # The rate at which the model updates its weights during training.
-LEARNING_RATE = 0.01
+LEARNING_RATE = 0.02
 # The number of units in each LSTM layer of the model.
 LSTM_UNITS = 128
 # Save checkpoints while training.
@@ -47,7 +49,7 @@ USE_CHECKPOINTS = True
 USE_VALIDATION = True
 # Split training data into two parts, one for training and one for evaluating performance.
 # For example, if the value is 0.2, then 20% of the training data will be used for validation.
-VALIDATION_SPLIT = 0.1
+VALIDATION_SPLIT = 0.2
 # Number of epochs with no improvement after which training will be stopped.
 TRAIN_PATIENCE = 6
 # Shuffle the training data before each epoch to prevent the model from learning the order of the data.
@@ -67,7 +69,8 @@ MONITOR_METRIC = 'val_loss'
 LOSS_FUNCTION = 'categorical_crossentropy'
 # Applies an activation function to an output.
 ACTIVATION_LAYER = 'softmax'
-# Save training debug data to debug folder
-USE_DEBUG = False
+# Save tensorboard training debug data to debug folder
+# https://www.tensorflow.org/tensorboard/get_started
+USE_TENSORBOARD = False
 # Evaluate training mode temperatures that will be used for generation phase
 EVALUATE_TEMPERATURES = [0.5, 0.8, 1.0]

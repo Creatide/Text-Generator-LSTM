@@ -61,7 +61,10 @@ class TextGenerator:
         self.texts_length = int(self.arguments['texts_length']) if isinstance(int(self.arguments['texts_length']), int) else c.GENERATE_TEXT_LENGTH
         self.texts_count = int(self.arguments['texts_count']) if isinstance(int(self.arguments['texts_count']), int) else c.GENERATE_TEXTS_COUNT
         self.process_id = datetime.datetime.now().strftime('%m%d%Y%H%M%S%f')
-        self.debug = self.arguments['debug']
+        self.debug = self.arguments['tensorboard']
+        
+        # Optional Modules Status
+        self.spellchecker = self.module_spellchecker_import()
 
         self.data_folder_path = self.get_data_folder_path()
         self.data_folder_json = self.cra_data_folder_json()
@@ -304,8 +307,7 @@ class TextGenerator:
             
         ]
         
-        # https://www.tensorflow.org/tensorboard/get_started
-        if self.arguments['debug']:
+        if self.arguments['tensorboard']:
             model_callback.append(keras.callbacks.TensorBoard(log_dir='./' + c.PATH_DEBUG_FOLDER))
         
         return model_callback
@@ -623,15 +625,26 @@ class TextGenerator:
         splitted_text = string.split('.')
         disallowed_initial_characters = " '\"’,.?!-"
         formatted_text = ''
-        for s in splitted_text:
+        for sentences in splitted_text:
+            
             # Remove disallowed initial characters
-            if len(s) > 0:
-                if s[0] in disallowed_initial_characters:
-                    s = self.delete_char(s, [0])
-            # Remove whispaces, capitalize and add dot and new line to end.
-            formatted_text += s.strip().capitalize()
-            if len(s) > 0:
+            if len(sentences) > 0:
+                if sentences[0] in disallowed_initial_characters:
+                    sentences = self.delete_char(sentences, [0])
+                    
+            # Remove whispaces
+            sentences = sentences.strip()
+            
+            # SpellChecker for words
+            if self.spellchecker:
+                sentences = self.check_spelling(sentences)
+                                    
+            formatted_text += sentences.capitalize()
+                    
+            # Add dot and new line to end of sentences
+            if len(sentences) > 0:
                 formatted_text += ".\n"
+                
         return formatted_text
 
 
@@ -711,8 +724,38 @@ class TextGenerator:
         else:
             with open(file_path + '.' + extension, merge_results) as data_file:
                 data_file.write("\n"+str(data))
-            
-
+                
+                
+    # ============================================================================================ #
+    # OPTINAL MODULES AND FEATURES                                                                 #
+    # ============================================================================================ #
+    
+    # SpellChecker Module Status ----------------------------------------------------------------- #
+    def module_spellchecker_import(self):        
+        if self.arguments['spellchecker']:
+            try:
+                print("SpellChecker module found!")
+                from spellchecker import SpellChecker
+                self.module_spellchecker = True
+                return SpellChecker()
+            except ModuleNotFoundError:
+                print("SpellChecker module not found. Install it with command: 'pip install pyspellchecker'")
+                self.module_spellchecker = False
+                return False            
+        else:
+            return False
+    
+    
+    # Check Spelling With SpellChecker ----------------------------------------------------------- #
+    def check_spelling(self, text):        
+        spellchecked_sentece = []
+        for word in text.split():
+            if len(word):
+                spellchecked_sentece.append(self.spellchecker.correction(word))
+        if len(spellchecked_sentece):
+            return ' '.join(spellchecked_sentece)
+                
+        
 # ================================================================================================ #
 # MAIN                                                                                             #
 # ================================================================================================ #
@@ -728,6 +771,7 @@ def main():
         'texts_length': c.GENERATE_TEXT_LENGTH,
         'texts_count': c.GENERATE_TEXTS_COUNT,
         'merge_results': c.MERGE_RESULTS,
+        'spellchecker': c.USE_SPELLCHECKER,
         # Train Argumantes
         'train': False,
         'evaluate': False,
@@ -748,7 +792,7 @@ def main():
         'monitor_metric': c.MONITOR_METRIC,
         'train_patience': c.TRAIN_PATIENCE,
         'activation_layer': c.ACTIVATION_LAYER,
-        'debug': c.USE_DEBUG,
+        'tensorboard': c.USE_TENSORBOARD,
         'options': [],
     }
     
