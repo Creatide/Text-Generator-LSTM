@@ -109,7 +109,7 @@ class TextGenerator:
             generated_text += next_character
             
             # Print progresss percent
-            if not self.arguments['evaluate'] and i % 20 == 0:
+            if not self.arguments['evaluate'] and i % 40 == 0:
                 print('Process:', round(i / self.texts_length * 100),"%",)
         
         # Remove randomly picked text from beginning if primal text not found
@@ -260,6 +260,13 @@ class TextGenerator:
             self.y_validation = self.y[-split_index:]
             self.x = self.x[:-split_index]
             self.y = self.y[:-split_index]
+        
+        # ? Investigate more about proper shuffling
+        # Shuffle data even there is ahuffle in keras mode_fit function?
+        # https://stackoverflow.com/a/60614729/1629596 and https://stackoverflow.com/a/65293208/1629596
+        # if self.arguments['shuffle_data']:
+        #     random.shuffle(self.x)
+        #     random.shuffle(self.y)
             
     
     # Build The Model: A Single LSTM Layer ------------------------------------------------------- #
@@ -750,10 +757,9 @@ class TextGenerator:
     def check_spelling(self, text):        
         spellchecked_sentece = []
         for word in text.split():
-            if len(word):
-                spellchecked_sentece.append(self.spellchecker.correction(word))
-        if len(spellchecked_sentece):
-            return ' '.join(spellchecked_sentece)
+            if word:
+                spellchecked_sentece.append(str(self.spellchecker.correction(word)))
+        return ' '.join(spellchecked_sentece) if len(spellchecked_sentece) else text
                 
         
 # ================================================================================================ #
