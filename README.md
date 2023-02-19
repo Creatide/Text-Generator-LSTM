@@ -111,6 +111,12 @@ So now you have Text Generator running and you need data for training? Here is c
 
 * [Project Gutenberg](https://www.gutenberg.org/) is a library of over 60,000 free eBooks. There you can download books in .txt format also for training.
 
+# Updated
+
+* **19.02.2023**
+  * Added support for [spellchecker](https://pypi.org/project/pyspellchecker). By default it's work for english, but there is also support for English - ‘en’, Spanish - ‘es’, French - ‘fr’, Portuguese - ‘pt’, German - ‘de’, Russian - ‘ru’, Arabic - ‘ar’.
+  * Spellchecking checks generated words and try to get the one "most likely" answer. Tested and seems to work for my lyrics quite nicely.
+
 # Licence
 
 MIT License
