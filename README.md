@@ -10,7 +10,7 @@ The main objective of this project was to study text generation and experiment w
 
 In addition, the script provides the flexibility to select custom parameters such as genre (if an info.json file is included in the folder) or artist/text (based on the folder name) for training. This is accomplished through scanning the folders and utilizing JSON objects.
 
-The script also includes a spellchecking feature, which utilizes the ['pyspellchecking'](https://pyspellchecker.readthedocs.io/en/latest/) module to attempt to correct nonsensical words in the generated text.
+The script also includes a spell checking feature, which utilizes the ['pyspellchecking'](https://pyspellchecker.readthedocs.io/en/latest/) module to attempt to correct nonsensical words in the generated text.
 
 # Install
 
@@ -48,6 +48,12 @@ git clone https://github.com/Creatide/Text-Generator-LSTM.git
 Now it should workd by running commands using terminal
 ```
 python main.py <COMMANDS>
+```
+## Spell Checking Module
+
+To use Python Spell Checking feature, you need to install ['pyspellchecker'](https://pyspellchecker.readthedocs.io/en/latest/) to make it to work.
+```
+pip install pyspellchecker
 ```
 
 # Commands
