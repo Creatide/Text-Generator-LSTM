@@ -32,7 +32,7 @@ USE_SPELLCHECKER = True
 # ------------------------------------------------------------------------------------------------ #
 # The length of the input sequences used for training the model.
 # High value could cause 'Dst tensor is not initialized' https://stackoverflow.com/a/40389498/1629596
-SEQUENCE_LENGTH = 40
+SEQUENCE_LENGTH = 32
 # The step size between the sequences used for training the model.
 STEP_SIZE = 3
 # The number of training examples used in one forward/backward pass of the model.
@@ -40,7 +40,7 @@ BATCH_SIZE = 128
 # The number of iterations over the entire training data set.
 EPOCHS = 1000
 # The rate at which the model updates its weights during training.
-LEARNING_RATE = 0.02
+LEARNING_RATE = 0.01
 # The number of units in each LSTM layer of the model.
 LSTM_UNITS = 128
 # Save checkpoints while training.
@@ -52,6 +52,9 @@ USE_VALIDATION = True
 VALIDATION_SPLIT = 0.2
 # Number of epochs with no improvement after which training will be stopped.
 TRAIN_PATIENCE = 6
+# Reduce learning rate when a metric has stopped improving. (new_lr = lr * factor.)
+# Set None or 0 to disable this feature
+REDUCE_LR_STUCK_FACTOR = 0.5
 # Shuffle the training data before each epoch to prevent the model from learning the order of the data.
 # Has no effect when steps_per_epoch is not None.
 SHUFFLE_DATA = True

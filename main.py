@@ -309,10 +309,11 @@ class TextGenerator:
         # https://keras.io/api/callbacks/
         model_callback = [
             keras.callbacks.EarlyStopping(monitor=self.arguments['monitor_metric'], patience=self.arguments['train_patience'], verbose=1, restore_best_weights=True),
-            keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=round(self.arguments['train_patience'] / 2), min_lr=0.001),
             keras.callbacks.ModelCheckpoint(filepath=str(checkpoint_filepath) + '_{epoch:02d}-{loss:.2f}' + self.arguments['model']['extension'], save_best_only=True),
-            
         ]
+        
+        if self.arguments['reduce_lr_stuck_factor']:
+            model_callback.append(keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=self.arguments['reduce_lr_stuck_factor'], patience=round(self.arguments['train_patience'] / 2), min_lr=self.arguments['learning_rate']/10))
         
         if self.arguments['tensorboard']:
             model_callback.append(keras.callbacks.TensorBoard(log_dir='./' + c.PATH_DEBUG_FOLDER))
@@ -797,6 +798,7 @@ def main():
         'loss_function': c.LOSS_FUNCTION,
         'monitor_metric': c.MONITOR_METRIC,
         'train_patience': c.TRAIN_PATIENCE,
+        'reduce_lr_stuck_factor': c.REDUCE_LR_STUCK_FACTOR,
         'activation_layer': c.ACTIVATION_LAYER,
         'tensorboard': c.USE_TENSORBOARD,
         'options': [],
