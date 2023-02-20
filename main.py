@@ -67,7 +67,7 @@ class TextGenerator:
         self.spellchecker = self.module_spellchecker_import()
 
         self.data_folder_path = self.get_data_folder_path()
-        self.data_folder_json = self.cra_data_folder_json()
+        self.data_folder_json = self.create_data_folder_json()
         self.set_model()
         
         if self.arguments['options']: self.set_options()
@@ -497,7 +497,7 @@ class TextGenerator:
     
     
     # Get/Create JSON File From Data Folder ------------------------------------------------------ #
-    def cra_data_folder_json(self, path='', save_json=True):
+    def create_data_folder_json(self, path='', save_json=True):
         path = self.data_folder_path if not os.path.exists(path) else path        
         json_data = {'name': os.path.basename(path)}
         
@@ -512,7 +512,7 @@ class TextGenerator:
                     for i in author_data_json:
                         json_data[i] = author_data_json[i]                    
             # Go recursive childrens
-            json_data['children'] = [self.cra_data_folder_json(os.path.join(path,x)) for x in os.listdir(path)]
+            json_data['children'] = [self.create_data_folder_json(os.path.join(path,x)) for x in os.listdir(path)]
         else:
             if os.path.splitext(path)[1] == '.json':
                 json_data['type'] = 'json'
