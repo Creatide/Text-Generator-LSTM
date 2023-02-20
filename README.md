@@ -101,6 +101,7 @@ So now you have Text Generator running and you need data for training? Here is c
   * Great tool to get all lyrics of chosen artist. 
   * There is good [guide how to use it easily](https://lyricsgenius.readthedocs.io/en/master/setup.html).
   * I created a [script](https://pastebin.com/kRsaLeJU) that prepares downloaded lyrics to .txt format and cleans un-wanted words and symbols from it.
+  * [Same script as above](https://pastebin.com/iseCK2iF), but with language and duplicates detection. Needed it for saving only English language versions from lyrics.
 
 * [Azapi](https://github.com/elmoiv/azapi): A fast and secure API for AZLyrics.com to get lyrics easily.
   * Another tool to download lyrics, but from AZLyrics.com.
