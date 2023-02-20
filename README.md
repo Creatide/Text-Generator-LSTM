@@ -16,7 +16,7 @@ The script also includes a spell checking feature, which utilizes the ['pyspellc
 
 Trained model from Black Metal band lyrics.
 Model: Corpus Length: 8888980, loss: 1.3416, accuracy: 0.5864, val_loss: 1.4301, val_accuracy: 0.5665
-
+```
 Dark thing where the souls of the end.
 The dark of pain is planet.
 Which fly to the winds are passed by shadows.
@@ -44,7 +44,7 @@ Shall the stone of death and for my flesh.
 Disguise the forest of the pain.
 Darkness in my mind.
 Soul stained the graves of dead.
-
+```
 # Install
 
 **1. (Optional, Windows) Install WSL, Ubuntu and Anaconda**
