@@ -10,6 +10,8 @@ The main objective of this project was to study text generation and experiment w
 
 In addition, the script provides the flexibility to select custom parameters such as genre (if an info.json file is included in the folder) or artist/text (based on the folder name) for training. This is accomplished through scanning the folders and utilizing JSON objects.
 
+The script also includes a spellchecking feature, which utilizes the ['pyspellchecking'](https://pyspellchecker.readthedocs.io/en/latest/) module to attempt to correct nonsensical words in the generated text.
+
 # Install
 
 **1. (Optional, Windows) Install WSL, Ubuntu and Anaconda**
