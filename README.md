@@ -12,6 +12,39 @@ In addition, the script provides the flexibility to select custom parameters suc
 
 The script also includes a spell checking feature, which utilizes the ['pyspellchecking'](https://pyspellchecker.readthedocs.io/en/latest/) module to attempt to correct nonsensical words in the generated text.
 
+### Example of Generated Results
+
+Trained model from Black Metal band lyrics.
+Model: Corpus Length: 8888980, loss: 1.3416, accuracy: 0.5864, val_loss: 1.4301, val_accuracy: 0.5665
+
+Dark thing where the souls of the end.
+The dark of pain is planet.
+Which fly to the winds are passed by shadows.
+Will lose the flames is in the serpent.
+More than the destiny bodies and i am return.
+The warriors of the dark.
+And i will come to musical lives.
+Have the light of death.
+To die to the corruption.
+Stripped in the past.
+Infinite for eternal trees.
+When the gates of secrets to be flee.
+
+No the burning years.
+They fight to only he to be doom.
+Once a none night is the light would thought.
+And den sun for me.
+Longer of hell.
+When the world of mine.
+We want to the broken beast.
+Conversation.
+And the burning step to strong.
+In the shadows now the shore.
+Shall the stone of death and for my flesh.
+Disguise the forest of the pain.
+Darkness in my mind.
+Soul stained the graves of dead.
+
 # Install
 
 **1. (Optional, Windows) Install WSL, Ubuntu and Anaconda**
