@@ -61,6 +61,7 @@ class TextGenerator:
         self.texts_length = int(self.arguments['texts_length']) if isinstance(int(self.arguments['texts_length']), int) else c.GENERATE_TEXT_LENGTH
         self.texts_count = int(self.arguments['texts_count']) if isinstance(int(self.arguments['texts_count']), int) else c.GENERATE_TEXTS_COUNT
         self.process_id = datetime.datetime.now().strftime('%m%d%Y%H%M%S%f')
+        self.process_status = False
         self.debug = self.arguments['tensorboard']
         
         # Optional Modules Status
@@ -129,13 +130,16 @@ class TextGenerator:
                     self.save_text_file(generated_text, name=self.process_id, path=c.PATH_RESULTS_FOLDER, merge_results=self.arguments['merge_results'])
                 else:
                     self.save_text_file(generated_text, path=c.PATH_RESULTS_FOLDER, merge_results=self.arguments['merge_results'])
-                    
+                
+                # Mark process started    
+                self.process_status = True
+                
                 # Kill last process to prevent useless preparation run
                 self.texts_count -= 1
                 if self.texts_count == 0:
                     exit()
                 self.generate()
-                
+        
         return generated_text
     
     
@@ -165,10 +169,11 @@ class TextGenerator:
     # Evaluate Training Mode --------------------------------------------------------------------- #
     def evaluate_training(self) -> None:        
         # Print training arguments
-        print_output = '\nTRAIN ARGUMENTS:\n'
-        for k, v in self.arguments.items():
-            print_output += str(k) + ':' + str(v) + '\n'
-        print(print_output) 
+        if not self.process_status:
+            print_output = '\nTRAIN ARGUMENTS:\n'
+            for k, v in self.arguments.items():
+                print_output += str(k) + ':' + str(v) + '\n'
+            print(print_output) 
                        
         self.save_text_file(print_output, path=c.PATH_RESULTS_FOLDER, name="evaluate_training", merge_results=True)
         
@@ -179,6 +184,9 @@ class TextGenerator:
             self.load_model_file()
         else: 
             self.model_build()
+            
+        # Mark process started
+        self.process_status = True
         
         for epoch in range(self.arguments['epochs']):
             
@@ -208,14 +216,14 @@ class TextGenerator:
     # Prepare Data For Training ------------------------------------------------------------------ #
     def prepare_data(self):
         
-        print('TEXT INFO:')
+        if not self.process_status: print('TEXT INFO:')
         
         if self.arguments['primer']:
             self.primer = self.clean_string(self.arguments['primer'])
-            print('Primer Text:', self.primer)
+            if not self.process_status: print('Primer Text:', self.primer)
         
         self.text = self.get_texts(self.arguments['items'])
-        print('Corpus Length:', len(self.text))
+        if not self.process_status: print('Corpus Length:', len(self.text))
         
         # Get text characters and compare to allowed_characters
         # self.characters = sorted(set(self.text))
@@ -230,8 +238,9 @@ class TextGenerator:
         # Use same characters set always to avoid list size errors
         self.characters = sorted([*self.allowed_characters])
         
-        print('Total Characters:', len(self.characters))
-        print('Allowed Characters:', ''.join(self.characters))
+        if not self.process_status: 
+            print('Total Characters:', len(self.characters))
+            print('Allowed Characters:', ''.join(self.characters))
         
         # Create indicies for characters
         self.character_indices = dict((c, i) for i, c in enumerate(self.characters))
@@ -243,7 +252,7 @@ class TextGenerator:
             sentences.append(self.text[i : i + self.arguments['sequence_length']])
             self.next_characters.append(self.text[i + self.arguments['sequence_length']])
             
-        print(f"Number of Sequences: {len(sentences)}\n")
+        if not self.process_status: print(f"Number of Sequences: {len(sentences)}\n")
         
         self.x = np.zeros((len(sentences), self.arguments['sequence_length'], len(self.characters)), dtype=bool)
         self.y = np.zeros((len(sentences), len(self.characters)), dtype=bool)
@@ -358,7 +367,7 @@ class TextGenerator:
                         
         cleaned_string = self.clean_string(texts_string)     
         
-        if not self.arguments['evaluate']:
+        if not self.arguments['evaluate'] and self.process_status != True:
             print('Authors Found:', authors_found)   
             print('Texts Found:', texts_found)
             print('Texts Length:', len(cleaned_string))
@@ -466,9 +475,10 @@ class TextGenerator:
         self.arguments['sequence_length'] = json_model_object['sequence_length']
     
         # Print out all arguments
-        print('\nProcess Arguments:'.upper())
-        for k, v in self.arguments.items():
-            print(k + ':', v)
+        if not self.process_status:
+            print('\nProcess Arguments:'.upper())
+            for k, v in self.arguments.items():
+                print(k + ':', v)
     
     
     # Update Existing Dictionary With New Values ------------------------------------------------- #
