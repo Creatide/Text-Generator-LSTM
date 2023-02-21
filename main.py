@@ -301,7 +301,7 @@ class TextGenerator:
             optimizer = keras.optimizers.Adam(learning_rate=self.arguments['learning_rate'])
         else:
             optimizer = keras.optimizers.RMSprop(learning_rate=self.arguments['learning_rate'])
-            
+        
         self.model.compile(loss=self.arguments['loss_function'], optimizer=optimizer, metrics=['accuracy'])
     
     
@@ -330,7 +330,7 @@ class TextGenerator:
         
         # https://keras.io/api/callbacks/
         model_callback = [
-            keras.callbacks.EarlyStopping(monitor=self.arguments['monitor_metric'], patience=self.arguments['train_patience'], verbose=1, restore_best_weights=self.arguments['restore_best_weights']),
+            keras.callbacks.EarlyStopping(monitor=self.arguments['monitor_metric'], patience=self.arguments['train_patience'], min_delta=0.0001, verbose=1, mode='auto', restore_best_weights=self.arguments['restore_best_weights']),
             keras.callbacks.ModelCheckpoint(filepath=str(checkpoint_filepath) + '_{epoch:02d}-{loss:.2f}' + self.arguments['model']['extension'], save_best_only=True),
         ]
         
@@ -471,7 +471,11 @@ class TextGenerator:
     def load_model_file(self):        
         # Get model name and load model from file
         model_file_path = os.path.join(self.data_folder_path, c.PATH_MODELS_FOLDER, self.arguments['model']['filename'])
-        self.model = keras.models.load_model(model_file_path, compile=False)
+        
+        if self.arguments['generate']:
+            self.model = keras.models.load_model(model_file_path, compile=False)
+        else:
+            self.model = keras.models.load_model(model_file_path, compile=True)
     
         # Load model arguments. Otherwise in generation process unique character count leads error if not same as in traning data.
         json_model_object = {}
