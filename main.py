@@ -345,7 +345,7 @@ class TextGenerator:
         author_data = self.json_search_objects(self.data_folder_json, ['name', 'genre'], args)
         
         # Shuffle authors to avoid alhabetic ordering
-        random.shuffle(author_data)
+        # random.shuffle(author_data)
         
         # Get all required texts based on file locations in json
         for author in author_data:

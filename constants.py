@@ -36,7 +36,7 @@ SEQUENCE_LENGTH = 32
 # The step size between the sequences used for training the model.
 STEP_SIZE = 3
 # The number of training examples used in one forward/backward pass of the model.
-BATCH_SIZE = 256
+BATCH_SIZE = 128
 # The number of iterations over the entire training data set.
 EPOCHS = 1000
 # The rate at which the model updates its weights during training.
