@@ -36,13 +36,13 @@ SEQUENCE_LENGTH = 32
 # The step size between the sequences used for training the model.
 STEP_SIZE = 3
 # The number of training examples used in one forward/backward pass of the model.
-BATCH_SIZE = 128
+BATCH_SIZE = 256
 # The number of iterations over the entire training data set.
 EPOCHS = 1000
 # The rate at which the model updates its weights during training.
 LEARNING_RATE = 0.01
 # The number of units in each LSTM layer of the model.
-LSTM_UNITS = 128
+LSTM_UNITS = 256
 # Save checkpoints while training.
 USE_CHECKPOINTS = True
 # Validation process helps to determine the model's suitability for deployment.
@@ -52,6 +52,9 @@ USE_VALIDATION = True
 VALIDATION_SPLIT = 0.2
 # Number of epochs with no improvement after which training will be stopped.
 TRAIN_PATIENCE = 6
+# Restore model weights from the epoch with the best value of the monitored quantity. 
+# If False, the model weights obtained at the last step of training are used. 
+RESTORE_BEST_WEIGHTS = True
 # Reduce learning rate when a metric has stopped improving. (new_lr = lr * factor.)
 # Set None or 0 to disable this feature
 REDUCE_LR_STUCK_FACTOR = 0.5
@@ -72,6 +75,9 @@ MONITOR_METRIC = 'val_loss'
 LOSS_FUNCTION = 'categorical_crossentropy'
 # Applies an activation function to an output.
 ACTIVATION_LAYER = 'softmax'
+# Adam: Stochastic gradient descent method that is based on adaptive estimation of first-order and second-order moments.
+# RMSprop: Moving average of the square of gradients. Divide the gradient by the root of this average.
+OPTIMIZER = 'adam'
 # Save tensorboard training debug data to debug folder
 # https://www.tensorflow.org/tensorboard/get_started
 USE_TENSORBOARD = False

@@ -227,7 +227,7 @@ class TextGenerator:
         #     print(f'ERROR: Text contains invalid characters: {", ".join(invalid_characters)}')
         #     exit()
         # else:
-        # Use same character always to avoid list size errors
+        # Use same characters set always to avoid list size errors
         self.characters = sorted([*self.allowed_characters])
         
         print('Total Characters:', len(self.characters))
@@ -279,7 +279,12 @@ class TextGenerator:
                 layers.Dense(len(self.characters), activation=self.arguments['activation_layer']),
             ]
         )
-        optimizer = keras.optimizers.RMSprop(learning_rate=self.arguments['learning_rate'])
+        # Select Adam of RMSprop optimizer
+        if self.arguments['optimizer'].lower() == 'adam':
+            optimizer = keras.optimizers.Adam(learning_rate=self.arguments['learning_rate'])
+        else:
+            optimizer = keras.optimizers.RMSprop(learning_rate=self.arguments['learning_rate'])
+            
         self.model.compile(loss=self.arguments['loss_function'], optimizer=optimizer, metrics=['accuracy'])
     
     
@@ -308,7 +313,7 @@ class TextGenerator:
         
         # https://keras.io/api/callbacks/
         model_callback = [
-            keras.callbacks.EarlyStopping(monitor=self.arguments['monitor_metric'], patience=self.arguments['train_patience'], verbose=1, restore_best_weights=True),
+            keras.callbacks.EarlyStopping(monitor=self.arguments['monitor_metric'], patience=self.arguments['train_patience'], verbose=1, restore_best_weights=self.arguments['restore_best_weights']),
             keras.callbacks.ModelCheckpoint(filepath=str(checkpoint_filepath) + '_{epoch:02d}-{loss:.2f}' + self.arguments['model']['extension'], save_best_only=True),
         ]
         
@@ -338,6 +343,9 @@ class TextGenerator:
         texts_found = 0
         texts_string = ''        
         author_data = self.json_search_objects(self.data_folder_json, ['name', 'genre'], args)
+        
+        # Shuffle authors to avoid alhabetic ordering
+        random.shuffle(author_data)
         
         # Get all required texts based on file locations in json
         for author in author_data:
@@ -798,8 +806,10 @@ def main():
         'loss_function': c.LOSS_FUNCTION,
         'monitor_metric': c.MONITOR_METRIC,
         'train_patience': c.TRAIN_PATIENCE,
+        'restore_best_weights': c.RESTORE_BEST_WEIGHTS,
         'reduce_lr_stuck_factor': c.REDUCE_LR_STUCK_FACTOR,
         'activation_layer': c.ACTIVATION_LAYER,
+        'optimizer': c.OPTIMIZER,
         'tensorboard': c.USE_TENSORBOARD,
         'options': [],
     }
