@@ -15,8 +15,24 @@ The script also includes a spell checking feature, which utilizes the ['pyspellc
 ### Example of Generated Results
 
 Trained model from Black Metal band lyrics.
-Model: Corpus Length: 8888980, loss: 1.3416, accuracy: 0.5864, val_loss: 1.4301, val_accuracy: 0.5665
 ```
+
+# Model: Optimizer: Adam, Corpus Length: 10657196, loss: 1.3256, accuracy: 0.5849, val_loss: 1.3567, val_accuracy: 0.5782
+
+The stones.
+Everything is so lead the steps.
+Silence that the worlds and an everything.
+My eyes before the dim of the fire.
+And so thou had waited the lonely moon.
+The sins shall found the soul.
+The earth is on the eye of your cross.
+This is the anger of the soul we hate.
+In the night of the same.
+For you will never complete of the voices.
+The way of war burns from the way.
+
+# Model: Optimizer: RMSprop, Corpus Length: 8888980, loss: 1.3416, accuracy: 0.5864, val_loss: 1.4301, val_accuracy: 0.5665
+
 Dark thing where the souls of the end.
 The dark of pain is planet.
 Which fly to the winds are passed by shadows.
@@ -29,21 +45,6 @@ To die to the corruption.
 Stripped in the past.
 Infinite for eternal trees.
 When the gates of secrets to be flee.
-
-No the burning years.
-They fight to only he to be doom.
-Once a none night is the light would thought.
-And den sun for me.
-Longer of hell.
-When the world of mine.
-We want to the broken beast.
-Conversation.
-And the burning step to strong.
-In the shadows now the shore.
-Shall the stone of death and for my flesh.
-Disguise the forest of the pain.
-Darkness in my mind.
-Soul stained the graves of dead.
 ```
 # Install
 
