@@ -132,9 +132,9 @@ python main.py -g -m MyModelName -l 400 -c 10
 | **-o** / --options | e.g.: "epochs=10, learning_rate=0.01" | All possible arguments that is in use in main.py script. |
 | **-v** / --version | -                                | Show versions of installed python, numpy and keras.      |
 
-## Constants.py for Best Results
+## Constants
 
-The 'constants.py' file contains a wide range of options for both training and generating. Each option is explained in the file, and adjusting them can lead to better training results. Keep in mind that any values set in 'constants.py' can be overwritten by command line arguments, if necessary. By experimenting with different settings, you can optimize your training process and achieve even better results.
+The 'constants.py' file contains a wide range of options for both training and generating. Each option is explained in the file, and adjusting them can lead to better training results. Keep in mind that **any values set in 'constants.py' can be overwritten by command line arguments**, if necessary. By experimenting with different settings, you can optimize your training process and achieve even better results.
 
 ```
 # NAMING
