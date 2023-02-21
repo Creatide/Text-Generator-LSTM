@@ -463,7 +463,7 @@ class TextGenerator:
     def load_model_file(self):        
         # Get model name and load model from file
         model_file_path = os.path.join(self.data_folder_path, c.PATH_MODELS_FOLDER, self.arguments['model']['filename'])
-        self.model = keras.models.load_model(model_file_path)
+        self.model = keras.models.load_model(model_file_path, compile=False)
     
         # Load model arguments. Otherwise in generation process unique character count leads error if not same as in traning data.
         json_model_object = {}
