@@ -69,6 +69,7 @@ wsl --install Ubuntu
 wsl -d ubuntu
 cd ~
 wget https://repo.continuum.io/archive/Anaconda3-2022.10-Linux-x86_64.sh
+bash Anaconda3-2022.10-Linux-x86_64.sh
 ```
 **2. (GPU) Install Anaconda and [TensorFlow](https://www.tensorflow.org/install/pip#linux_setup)**
 ```
