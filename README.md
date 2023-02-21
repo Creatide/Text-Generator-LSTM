@@ -16,6 +16,20 @@ The script also includes a spell checking feature, which utilizes the ['pyspellc
 
 Trained model from Black Metal band lyrics.
 ```
+# Model: Optimizer: Adam, Corpus Length: 10657199,  loss: 1.2125, accuracy: 0.6170, val_loss: 1.3453, val_accuracy: 0.5879
+
+A moment that the gods pretend.
+The sea of hate and procession.
+Where story you are.
+I am the fire devoured to seek the storm in the eternal cold.
+The neck of death.
+Like truths that extinction.
+Mighty waters close.
+Hallowed in the trees of stone.
+In the hour of my mind.
+The man is not the sign.
+In the eyes of hope shall be the new purge.
+And the story bloody breath of trial.
 
 # Model: Optimizer: Adam, Corpus Length: 10657196, loss: 1.3256, accuracy: 0.5849, val_loss: 1.3567, val_accuracy: 0.5782
 
