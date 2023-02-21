@@ -26,6 +26,7 @@ import os
 import sys
 import datetime
 import getopt
+import string
 import json
 import random
 import numpy as np
@@ -88,10 +89,17 @@ class TextGenerator:
             self.load_model_file()     
             self.prepare_data()
         
-        # Create initial sentence from corpus random location by selecting index
-        start_index = random.randint(0, len(self.text) - self.arguments['sequence_length'] - 1)
-        # Slice sentence from corpus
-        sentence = self.text[start_index : start_index + self.arguments['sequence_length']]
+        # Check if there is texts available, if not use randomly generated string,
+        # Just in case if user not provide any primer text
+        if self.text:
+            # Create initial sentence from corpus random location by selecting index
+            start_index = random.randint(0, len(self.text) - self.arguments['sequence_length'] - 1)
+            # Slice sentence from corpus
+            sentence = self.text[start_index : start_index + self.arguments['sequence_length']]
+        else:
+            # Randomly generated string for feeding some variation for beginning if primal text not privided
+            sentence = ''.join(random.choices(string.ascii_letters, k=self.arguments['sequence_length'])).lower()
+            
         # Set initial text or randomly picked from corpus
         generated_text = self.primer if len(self.primer) else sentence
         
