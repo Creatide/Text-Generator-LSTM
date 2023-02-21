@@ -132,6 +132,54 @@ python main.py -g -m MyModelName -l 400 -c 10
 | **-o** / --options | e.g.: "epochs=10, learning_rate=0.01" | All possible arguments that is in use in main.py script. |
 | **-v** / --version | -                                | Show versions of installed python, numpy and keras.      |
 
+## Constants.py for Best Results
+
+The 'constants.py' file contains a wide range of options for both training and generating. Each option is explained in the file, and adjusting them can lead to better training results. Keep in mind that any values set in 'constants.py' can be overwritten by command line arguments, if necessary. By experimenting with different settings, you can optimize your training process and achieve even better results.
+
+```
+# NAMING
+PATH_DATA_FOLDER = 'data'
+PATH_TEXTS_FOLDER = 'texts'
+PATH_RESULTS_FOLDER = 'results'
+PATH_MODELS_FOLDER = 'models'
+PATH_CHECKPOINTS_FOLDER = 'checkpoints'
+PATH_DEBUG_FOLDER = 'debug'
+JSON_INFO_FILENAME = 'info.json'
+DEFAULT_MODEL_NAME = 'default'
+DEFAULT_MODEL_FORMAT = '.h5'
+DEFAULT_MODEL_FILENAME = DEFAULT_MODEL_NAME + DEFAULT_MODEL_FORMAT
+
+# GENERATE
+PRIMER_TEXT = ''
+GENERATE_TEXT_LENGTH = 400
+GENERATE_TEXTS_COUNT = 1
+MERGE_RESULTS = True
+TEXT_FORMATTING = True
+TEMPERATURE = 0.6
+USE_SPELLCHECKER = True
+
+# TRAINING
+SEQUENCE_LENGTH = 32
+STEP_SIZE = 3
+BATCH_SIZE = 256
+EPOCHS = 1000
+LEARNING_RATE = 0.01
+LSTM_UNITS = 256
+USE_CHECKPOINTS = True
+USE_VALIDATION = True
+VALIDATION_SPLIT = 0.2
+TRAIN_PATIENCE = 6
+RESTORE_BEST_WEIGHTS = True
+REDUCE_LR_STUCK_FACTOR = 0.5
+SHUFFLE_DATA = True
+STEPS_PER_EPOCH = None
+MONITOR_METRIC = 'val_loss'
+LOSS_FUNCTION = 'categorical_crossentropy'
+ACTIVATION_LAYER = 'softmax'
+OPTIMIZER = 'adam'
+USE_TENSORBOARD = False
+EVALUATE_TEMPERATURES = [0.5, 0.8, 1.0]
+```
 
 # Data Crawling & Links
 So now you have Text Generator running and you need data for training? Here is couple tips and scripts that can help you to collect some lyrics and download free books.
