@@ -91,7 +91,7 @@ class TextGenerator:
         
         # Check if there is texts available, if not use randomly generated string,
         # Just in case if user not provide any primer text
-        if self.text:
+        if len(self.text) > self.arguments['sequence_length']:
             # Create initial sentence from corpus random location by selecting index
             start_index = random.randint(0, len(self.text) - self.arguments['sequence_length'] - 1)
             # Slice sentence from corpus
