@@ -114,7 +114,7 @@ pip install pyspellchecker
 You can use this script with terminal commands. Here is couple examples how to use those:
 
 ## Train Dracula Example
-Here's an example of how to train a model and generate text using the Dracula book provided in the data folder for testing purposes.
+Here's an example of how to train a model and generate text using the Dracula book provided in the `data` folder for testing purposes.
 ```
 # Train model based Dracula book
 python main.py -t -m dracula -i Dracula
@@ -124,12 +124,12 @@ python main.py -g -m dracula -c 10
 ```
 
 ## How Command Arguments Works?
-Train (-t) model and save it to folder "data/models" using name -(m) MyModelName.h5. Then we use only these artists and custom genre for training data (-i).
+Train `-t` model and save it to folder `data/models` using name `-m MyModelName`. Then we use only these artists and custom genre for training data using `-i`.
 ```
 python main.py -t -m MyModelName -i "Alice in Chains, Nirvana, grunge"
 ```
 
-Generate texts (-g) using model named (-m) MyModelName. Generated text length (-l) will be 400 characters and we will generate 10 pieces (-c) of different texts.
+Generate `-g` texts using model named `-m MyModelName`. Generated text length `-l` will be 400 characters and we will generate 10 pieces `-c` of different texts.
 ```
 python main.py -g -m MyModelName -l 400 -c 10
 ```
