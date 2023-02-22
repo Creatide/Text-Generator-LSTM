@@ -207,6 +207,8 @@ tensorboard --logdir=./debug
 ```
 ![TensorBoard UI](https://i.imgur.com/VieOV7F.png)
 
+> If you want to view all diagrams simultaneously on a single page, simply use the "/*" mark in the filter field.
+
 # Data Crawling & Links
 So now you have Text Generator running and you need data for training? Here is couple tips and scripts that can help you to collect some lyrics and download free books.
 
