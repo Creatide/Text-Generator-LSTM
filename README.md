@@ -62,6 +62,8 @@ When the gates of secrets to be flee.
 ```
 # Install
 
+To run Keras using a GPU, follow the instructions 2A. section for GPU installation. However, if you wish to use a CPU, use the CPU commands from section 2B. instead.
+
 **1. (Optional, Windows) Install WSL, Ubuntu and Anaconda**
 ```
 wsl --install
@@ -71,7 +73,7 @@ cd ~
 wget https://repo.continuum.io/archive/Anaconda3-2022.10-Linux-x86_64.sh
 bash Anaconda3-2022.10-Linux-x86_64.sh
 ```
-**2. (GPU) Install Anaconda and [TensorFlow](https://www.tensorflow.org/install/pip#linux_setup)**
+**2A. (GPU) Install Anaconda and [TensorFlow](https://www.tensorflow.org/install/pip#linux_setup)**
 ```
 conda create -n tf python=3.10 pip
 conda activate tf
@@ -85,7 +87,7 @@ source $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
 mkdir -p $CONDA_PREFIX/lib/nvvm/libdevice
 cp $CONDA_PREFIX/lib/libdevice.10.bc $CONDA_PREFIX/lib/nvvm/libdevice/
 ```
-**2. (CPU) Install Anaconda and [TensorFlow](https://www.tensorflow.org/install/pip#linux_setup)**
+**2B. (CPU) Install Anaconda and [TensorFlow](https://www.tensorflow.org/install/pip#linux_setup)**
 ```
 conda create -n tf python=3.10 pip tensorflow
 ```
