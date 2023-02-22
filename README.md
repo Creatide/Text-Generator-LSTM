@@ -199,7 +199,7 @@ EVALUATE_TEMPERATURES = [0.5, 0.8, 1.0]
 
 # Use TensorBoard
 
-To use TensorBoard, simply set the `USE_TENSORBOARD` flag to `True` in the `constants.py` file. This will save metrics data from the training process to a `logs/` folder, which you can then visualize in TensorBoard. To launch TensorBoard and view your training progress, navigate to the project root directory and run the following command:
+To use TensorBoard, simply set the `USE_TENSORBOARD` flag to `True` in the `constants.py` file. This will save metrics data from the training process to a `debug` folder, which you can then visualize in TensorBoard. To launch TensorBoard and view your training progress, navigate to the project root directory and run the following command:
 ```
 tensorboard --logdir=./debug
 ```
