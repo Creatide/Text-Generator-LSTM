@@ -113,6 +113,17 @@ pip install pyspellchecker
 
 You can use this script with terminal commands. Here is couple examples how to use those:
 
+## Train Dracula Example
+Here's an example of how to train a model and generate text using the Dracula book provided in the data folder for testing purposes.
+```
+# Train model based Dracula book
+python main.py -t -m dracula -i Dracula
+
+# Generate text using model
+python main.py -g -m dracula -c 10
+```
+
+## How Command Arguments Works?
 Train (-t) model and save it to folder "data/models" using name -(m) MyModelName.h5. Then we use only these artists and custom genre for training data (-i).
 ```
 python main.py -t -m MyModelName -i "Alice in Chains, Nirvana, grunge"
