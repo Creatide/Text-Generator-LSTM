@@ -205,6 +205,7 @@ To use TensorBoard, simply set the `USE_TENSORBOARD` flag to `True` in the `cons
 ```
 tensorboard --logdir=./debug
 ```
+![TensorBoard UI](https://i.imgur.com/VieOV7F.png)
 
 # Data Crawling & Links
 So now you have Text Generator running and you need data for training? Here is couple tips and scripts that can help you to collect some lyrics and download free books.
