@@ -48,7 +48,7 @@ class TextGenerator:
         self.arguments = arguments
         self.model = None
         self.model_history = None
-        self.model_filename = None
+        self.model_filename = self.arguments['model']
         self.model_found = False
         self.text = None
         self.primer = ''        
@@ -61,7 +61,7 @@ class TextGenerator:
         self.y = self.y_validation = None
         self.texts_length = int(self.arguments['texts_length']) if isinstance(int(self.arguments['texts_length']), int) else c.GENERATE_TEXT_LENGTH
         self.texts_count = int(self.arguments['texts_count']) if isinstance(int(self.arguments['texts_count']), int) else c.GENERATE_TEXTS_COUNT
-        self.process_id = datetime.datetime.now().strftime('%m%d%Y%H%M%S%f')
+        self.process_id = datetime.datetime.now().strftime('%m%d%Y%H%M%S')
         self.process_status = False
         self.debug = self.arguments['tensorboard']
         
@@ -330,7 +330,7 @@ class TextGenerator:
         
         # https://keras.io/api/callbacks/
         model_callback = [
-            keras.callbacks.EarlyStopping(monitor=self.arguments['monitor_metric'], patience=self.arguments['train_patience'], min_delta=0.0001, verbose=1, mode='auto', restore_best_weights=self.arguments['restore_best_weights']),
+            keras.callbacks.EarlyStopping(monitor=self.arguments['monitor_metric'], patience=self.arguments['train_patience'], verbose=1, restore_best_weights=self.arguments['restore_best_weights']),
             keras.callbacks.ModelCheckpoint(filepath=str(checkpoint_filepath) + '_{epoch:02d}-{loss:.2f}' + self.arguments['model']['extension'], save_best_only=True),
         ]
         
@@ -338,7 +338,8 @@ class TextGenerator:
             model_callback.append(keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=self.arguments['reduce_lr_stuck_factor'], patience=round(self.arguments['train_patience'] / 2), min_lr=self.arguments['learning_rate']/10))
         
         if self.arguments['tensorboard']:
-            model_callback.append(keras.callbacks.TensorBoard(log_dir='./' + c.PATH_DEBUG_FOLDER))
+            name = self.model_filename + '_' + self.process_id
+            model_callback.append(keras.callbacks.TensorBoard(log_dir='./' + c.PATH_DEBUG_FOLDER + '/{}'.format(name)))
         
         return model_callback
     
@@ -747,7 +748,7 @@ class TextGenerator:
             print(f"WARNING: '{path}' not exist. Created new folder.")
         
         if not name:
-            timestamp = datetime.datetime.now().strftime('%m%d%Y%H%M%S%f')
+            timestamp = datetime.datetime.now().strftime('%m%d%Y%H%M%S')
             file_path = os.path.join(path, str(timestamp))
         else:
             file_path = os.path.join(path, str(name))
