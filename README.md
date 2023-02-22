@@ -197,6 +197,13 @@ USE_TENSORBOARD = False
 EVALUATE_TEMPERATURES = [0.5, 0.8, 1.0]
 ```
 
+# Use TensorBoard
+
+To use TensorBoard, simply set the `USE_TENSORBOARD` flag to `True` in the `constants.py` file. This will save metrics data from the training process to a `logs/` folder, which you can then visualize in TensorBoard. To launch TensorBoard and view your training progress, navigate to the project root directory and run the following command:
+```
+tensorboard --logdir=./debug
+```
+
 # Data Crawling & Links
 So now you have Text Generator running and you need data for training? Here is couple tips and scripts that can help you to collect some lyrics and download free books.
 
