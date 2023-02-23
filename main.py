@@ -277,13 +277,6 @@ class TextGenerator:
             self.y_validation = self.y[-split_index:]
             self.x = self.x[:-split_index]
             self.y = self.y[:-split_index]
-        
-        # ? Investigate more about proper shuffling
-        # Shuffle data even there is ahuffle in keras mode_fit function?
-        # https://stackoverflow.com/a/60614729/1629596 and https://stackoverflow.com/a/65293208/1629596
-        # if self.arguments['shuffle_data']:
-        #     random.shuffle(self.x)
-        #     random.shuffle(self.y)
             
     
     # Build The Model: A Single LSTM Layer ------------------------------------------------------- #
@@ -295,12 +288,6 @@ class TextGenerator:
         self.model = keras.Sequential()        
         # Add input
         self.model.add(keras.Input(shape=(self.arguments['sequence_length'], len(self.characters))))
-        
-        # LAYERS:
-        # self.model.add(layers.LSTM(self.arguments['lstm_layers'], return_sequences=True))
-        # self.model.add(layers.Dropout(0.2))
-        # self.model.add(layers.LSTM(self.arguments['lstm_layers']))
-        # self.model.add(layers.Dropout(0.2))
         
         # LSTM layers
         # If user provided only single values without square brackets, convert it to list
@@ -331,7 +318,6 @@ class TextGenerator:
                     self.model.add(layers.Dense(len(self.characters), activation=value))
                     print(f"Dense layer {i+1} added with layer '{value}' activation function.")
             
-        
         # Activation layer
         self.model.add(layers.Activation(self.arguments['activation_layer']))
         
