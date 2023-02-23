@@ -288,20 +288,60 @@ class TextGenerator:
     
     # Build The Model: A Single LSTM Layer ------------------------------------------------------- #
     def model_build(self):
-        self.model = keras.Sequential(
-            [
-                keras.Input(shape=(self.arguments['sequence_length'], len(self.characters))),
-                layers.LSTM(self.arguments['lstm_units']),
-                # layers.Dense(units=32, activation=self.arguments['activation_layer']),
-                layers.Dense(len(self.characters), activation=self.arguments['activation_layer']),
-            ]
-        )
-        # Select Adam of RMSprop optimizer
+        
+        # https://keras.io/api/layers/activations/
+        activation_types = ['linear', 'softmax', 'relu', 'sigmoid', 'tanh', 'softplus', 'softsign', 'selu', 'elu', 'exponential' ]
+        
+        self.model = keras.Sequential()        
+        # Add input
+        self.model.add(keras.Input(shape=(self.arguments['sequence_length'], len(self.characters))))
+        
+        # LAYERS:
+        # self.model.add(layers.LSTM(self.arguments['lstm_layers'], return_sequences=True))
+        # self.model.add(layers.Dropout(0.2))
+        # self.model.add(layers.LSTM(self.arguments['lstm_layers']))
+        # self.model.add(layers.Dropout(0.2))
+        
+        # LSTM layers
+        # If user provided only single values without square brackets, convert it to list
+        self.arguments['lstm_layers'] = self.arguments['lstm_layers'] if isinstance(self.arguments['lstm_layers'], list) else [int(self.arguments['lstm_layers'])]
+        # Create multiple LSTM layers if user provided list
+        if isinstance(self.arguments['lstm_layers'], list) and len(self.arguments['lstm_layers']):
+            for i, value in enumerate(self.arguments['lstm_layers']):
+                # Last element in list should not return_sequences
+                if i == len(self.arguments['lstm_layers']) - 1:
+                    self.model.add(layers.LSTM(value))
+                else:                    
+                    self.model.add(layers.LSTM(value, return_sequences=True))                    
+                print(f'LSTM layer {i+1} added with value of {value} units.')
+                
+                # Add Dropout layers after each LSTM layer if user provided value
+                dropout_rate = self.clamp_number(self.arguments['dropout_layers'], 0, 1, 2)
+                if dropout_rate:
+                    self.model.add(layers.Dropout(dropout_rate))
+                    print(f'Dropout layer {i+1} added with value of {dropout_rate} units.')
+        
+        # Dense layers
+        # If user provided only single values without square brackets, convert it to list
+        self.arguments['dense_layers'] = self.arguments['dense_layers'] if isinstance(self.arguments['dense_layers'], list) else [str(self.arguments['dense_layers'])]
+        # Create multiple Dense layers if user provided list
+        if isinstance(self.arguments['dense_layers'], list) and len(self.arguments['dense_layers']):
+            for i, value in enumerate(self.arguments['dense_layers']):
+                if value in activation_types:
+                    self.model.add(layers.Dense(len(self.characters), activation=value))
+                    print(f"Dense layer {i+1} added with layer '{value}' activation function.")
+            
+        
+        # Activation layer
+        self.model.add(layers.Activation(self.arguments['activation_layer']))
+        
+        # Optimizer: Select Adam of RMSprop optimizer
         if self.arguments['optimizer'].lower() == 'adam':
             optimizer = keras.optimizers.Adam(learning_rate=self.arguments['learning_rate'])
         else:
             optimizer = keras.optimizers.RMSprop(learning_rate=self.arguments['learning_rate'])
         
+        # Compile model
         self.model.compile(loss=self.arguments['loss_function'], optimizer=optimizer, metrics=['accuracy'])
     
     
@@ -318,24 +358,40 @@ class TextGenerator:
             validation_split=self.arguments['validation_split'] if not self.arguments['validation'] else None,
             steps_per_epoch=self.arguments['steps_per_epoch'] if self.arguments['steps_per_epoch'] else None,
             shuffle=self.arguments['shuffle_data'],            
-            )
+        )
         
     
     # Create Callbacks For Model ----------------------------------------------------------------- #
     def create_model_callbacks(self):
         # Create debug folder if needed
         if not os.path.exists(c.PATH_DEBUG_FOLDER): os.makedirs(c.PATH_DEBUG_FOLDER)
-        # Create filepath for checkpoints
-        checkpoint_filepath = os.path.join(self.data_folder_path, c.PATH_MODELS_FOLDER, c.PATH_CHECKPOINTS_FOLDER, self.arguments['model']['name'])
         
         # https://keras.io/api/callbacks/
-        model_callback = [
-            keras.callbacks.EarlyStopping(monitor=self.arguments['monitor_metric'], patience=self.arguments['train_patience'], verbose=1, restore_best_weights=self.arguments['restore_best_weights']),
-            keras.callbacks.ModelCheckpoint(filepath=str(checkpoint_filepath) + '_{epoch:02d}-{loss:.2f}' + self.arguments['model']['extension'], save_best_only=True),
-        ]
+        model_callback = []
+        
+        if self.arguments['early_stopping']:
+            model_callback.append(keras.callbacks.EarlyStopping(
+                monitor=self.arguments['monitor_metric'], 
+                patience=self.arguments['train_patience'], 
+                verbose=1, 
+                restore_best_weights=self.arguments['restore_best_weights']
+                ))
+                
+        if self.arguments['checkpoints']:
+            checkpoint_filepath = os.path.join(self.data_folder_path, c.PATH_MODELS_FOLDER, c.PATH_CHECKPOINTS_FOLDER, self.arguments['model']['name'])
+            model_callback.append(keras.callbacks.ModelCheckpoint(
+                filepath=str(checkpoint_filepath) + '_{epoch:02d}-{loss:.2f}' + self.arguments['model']['extension'], 
+                save_best_only=True, 
+                save_weights_only=False
+                ))
         
         if self.arguments['reduce_lr_stuck_factor']:
-            model_callback.append(keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=self.arguments['reduce_lr_stuck_factor'], patience=round(self.arguments['train_patience'] / 2), min_lr=self.arguments['learning_rate']/10))
+            model_callback.append(keras.callbacks.ReduceLROnPlateau(
+                monitor='val_loss', 
+                factor=self.arguments['reduce_lr_stuck_factor'], 
+                patience=round(self.arguments['train_patience'] / 2), 
+                min_lr=self.arguments['learning_rate']/10
+                ))
         
         if self.arguments['tensorboard']:
             name = self.model_filename + '_' + self.process_id
@@ -473,25 +529,34 @@ class TextGenerator:
         # Get model name and load model from file
         model_file_path = os.path.join(self.data_folder_path, c.PATH_MODELS_FOLDER, self.arguments['model']['filename'])
         
+        if not os.path.exists(model_file_path):
+            print('No models found.')
+            exit()
+        
+        # In generate process compile will cause error
         if self.arguments['generate']:
             self.model = keras.models.load_model(model_file_path, compile=False)
         else:
             self.model = keras.models.load_model(model_file_path, compile=True)
     
-        # Load model arguments. Otherwise in generation process unique character count leads error if not same as in traning data.
-        json_model_object = {}
-        with open(model_file_path + '.json', "r") as json_model_info:
-            json_model_object = json.load(json_model_info)
-            
-        # Copy values from info JSON
-        self.arguments['items'] = json_model_object['items']
-        self.arguments['sequence_length'] = json_model_object['sequence_length']
-    
-        # Print out all arguments
-        if not self.process_status:
-            print('\nProcess Arguments:'.upper())
-            for k, v in self.arguments.items():
-                print(k + ':', v)
+        # Check if model json file exist, even it doesn't needed for loading
+        if os.path.exists(model_file_path + '.json'):
+            # Load model arguments
+            json_model_object = {}
+            with open(model_file_path + '.json', "r") as json_model_info:
+                json_model_object = json.load(json_model_info)
+                
+            # Copy values from info JSON
+            self.arguments['items'] = json_model_object['items']
+            self.arguments['sequence_length'] = json_model_object['sequence_length']
+        
+            # Print out all arguments
+            if not self.process_status:
+                print('\nProcess Arguments:'.upper())
+                for k, v in self.arguments.items():
+                    print(k + ':', v)
+        else:
+            print('WARNING: ' + model_file_path + '.json' + ' is file missing. Cannot load training arguments.')
     
     
     # Update Existing Dictionary With New Values ------------------------------------------------- #
@@ -739,13 +804,22 @@ class TextGenerator:
         return output
     
     
+     # Clamp Value Between Min And Max ----------------------------------------------------------- #
+    def clamp_number(self, n, minn, maxn, round_decimals=None):
+        n = min(max(n, minn), maxn)
+        if isinstance(round_decimals, int):
+            return round(n, round_decimals)
+        else:
+            return n
+    
+    
     # Save Different Type of Text Files -------------------------------------------------------------- #
     def save_text_file(self, data, path=Path.cwd(), name=None, extension='txt', prefix='', suffix='', merge_results=False):                
         merge_results = 'a' if merge_results else 'w'
         file_path = ''
         if not os.path.exists(path):
             os.makedirs(path)
-            print(f"WARNING: '{path}' not exist. Created new folder.")
+            print(f"NOTE: '{path}' folder not exist. Created new folder.")
         
         if not name:
             timestamp = datetime.datetime.now().strftime('%m%d%Y%H%M%S')
@@ -821,12 +895,15 @@ def main():
         'batch_size': c.BATCH_SIZE,
         'epochs': c.EPOCHS,
         'learning_rate': c.LEARNING_RATE,
-        'lstm_units': c.LSTM_UNITS,
+        'lstm_layers': c.LSTM_LAYERS,
+        'dense_layers': c.DENSE_LAYERS,
+        'dropout_layers': c.DROPOUT_LAYERS,
         'validation': c.USE_VALIDATION,
         'validation_split': c.VALIDATION_SPLIT,
         'shuffle_data': c.SHUFFLE_DATA,
         'steps_per_epoch': c.STEPS_PER_EPOCH,
         'loss_function': c.LOSS_FUNCTION,
+        'early_stopping': c.USE_EARLY_STOPPING,
         'monitor_metric': c.MONITOR_METRIC,
         'train_patience': c.TRAIN_PATIENCE,
         'restore_best_weights': c.RESTORE_BEST_WEIGHTS,
