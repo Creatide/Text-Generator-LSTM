@@ -62,6 +62,17 @@ When the gates of secrets to be flee.
 ```
 # Install
 
+## Requirements
+
+I've been running this script on the following setup:
+* Windows 11 
+* Ubuntu 22.10 (via WSL)
+* Python: 3.10.9
+* Numpy: 1.24.2
+* Keras: 2.11.0
+
+## Install Commands
+
 To run Keras using a GPU, follow the instructions 2A. section for GPU installation. However, if you wish to use a CPU, use the CPU commands from section 2B. instead.
 
 **1. (Optional, Windows) Install WSL, Ubuntu and Anaconda**
@@ -166,7 +177,6 @@ python main.py -g -m MyModelName -l 400 -c 10
 The 'constants.py' file contains a wide range of options for both training and generating. Each option is explained in the file, and adjusting them can lead to better training results. Keep in mind that **any values set in 'constants.py' can be overwritten by command line arguments**, if necessary. By experimenting with different settings, you can optimize your training process and achieve even better results.
 
 ```
-# NAMING
 PATH_DATA_FOLDER = 'data'
 PATH_TEXTS_FOLDER = 'texts'
 PATH_RESULTS_FOLDER = 'results'
@@ -177,37 +187,36 @@ JSON_INFO_FILENAME = 'info.json'
 DEFAULT_MODEL_NAME = 'default'
 DEFAULT_MODEL_FORMAT = '.h5'
 DEFAULT_MODEL_FILENAME = DEFAULT_MODEL_NAME + DEFAULT_MODEL_FORMAT
-
-# GENERATE
 PRIMER_TEXT = ''
 GENERATE_TEXT_LENGTH = 400
 GENERATE_TEXTS_COUNT = 1
+TEMPERATURE = 0.6
 MERGE_RESULTS = True
 TEXT_FORMATTING = True
-TEMPERATURE = 0.6
 USE_SPELLCHECKER = True
-
-# TRAINING
 SEQUENCE_LENGTH = 32
 STEP_SIZE = 3
-BATCH_SIZE = 256
-EPOCHS = 1000
+BATCH_SIZE = 64
+EPOCHS = 40
 LEARNING_RATE = 0.01
-LSTM_UNITS = 256
-USE_CHECKPOINTS = True
-USE_VALIDATION = True
-VALIDATION_SPLIT = 0.2
-TRAIN_PATIENCE = 6
-RESTORE_BEST_WEIGHTS = True
-REDUCE_LR_STUCK_FACTOR = 0.5
-SHUFFLE_DATA = True
-STEPS_PER_EPOCH = None
-MONITOR_METRIC = 'val_loss'
+LSTM_LAYERS = [256, 256]
+DROPOUT_LAYERS = 0
+DENSE_LAYERS = ['linear']
 LOSS_FUNCTION = 'categorical_crossentropy'
 ACTIVATION_LAYER = 'softmax'
 OPTIMIZER = 'adam'
-USE_TENSORBOARD = False
+USE_CHECKPOINTS = True
+STEPS_PER_EPOCH = None
+SHUFFLE_DATA = True
+USE_TENSORBOARD = True
+USE_VALIDATION = True
+VALIDATION_SPLIT = 0.2
+REDUCE_LR_STUCK_FACTOR = 0.5
 EVALUATE_TEMPERATURES = [0.5, 0.8, 1.0]
+USE_EARLY_STOPPING = False
+RESTORE_BEST_WEIGHTS = True
+TRAIN_PATIENCE = 6
+MONITOR_METRIC = 'val_loss'
 ```
 
 # Use TensorBoard
