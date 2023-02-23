@@ -65,11 +65,11 @@ When the gates of secrets to be flee.
 ## Requirements
 
 I've been running this script on the following setup:
-Windows 11 
-Ubuntu 22.10 (via WSL)
-Python: 3.10.9
-Numpy: 1.24.2
-Keras: 2.11.0
+* Windows 11 
+* Ubuntu 22.10 (via WSL)
+* Python: 3.10.9
+* Numpy: 1.24.2
+* Keras: 2.11.0
 
 ## Install Commands
 
