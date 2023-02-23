@@ -1,14 +1,16 @@
 '''
-ABOUT THIS SCRIPT:
-------------------
+# ================================================================================================ #
+# PYCLD2: LANGUAGE DETECTOR SCRIPT                                                                 #
+# ================================================================================================ #
+
 This script is not related to actual code, but is an additional script I use to 
 detect the languages in text files that I use for training. Its purpose is to 
 identify the languages used in the files and help detect any incorrect languages. 
 This script is also helpful in cleaning up files that could potentially interfere 
 with the training data for the target language.
 
-INSTALL PROCESS:
-----------------
+# INSTALL LIBRARIES: ----------------------------------------------------------------------------- #
+
 Update all of your packages in Linux first:
 sudo apt update
 sudo apt upgrade

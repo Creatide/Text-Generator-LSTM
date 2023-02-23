@@ -46,13 +46,13 @@ STEP_SIZE = 3
 # The number of training examples used in one forward/backward pass of the model.
 BATCH_SIZE = 64
 # The number of iterations over the entire training data set.
-EPOCHS = 40
+EPOCHS = 20
 # The rate at which the model updates its weights during training.
 LEARNING_RATE = 0.01
 # The number is unit size of each LSTM layer of the model.
 # Set multiple LSTM layers to model by using list, e.g. three different size of LSTM layers [256, 128, 64]
 # Note that you need at least one LSTM layer to create model
-LSTM_LAYERS = [256, 256]
+LSTM_LAYERS = [256]
 # Dropout prevent overfitting. It randomly selected neurons are ignored during training.
 # Add dropout layer after every LSTM layer with chosen value between 0.0-1.0 (0.2 is 20%)
 # Disable dropout layers byt settings it to 0.
@@ -70,7 +70,7 @@ LOSS_FUNCTION = 'categorical_crossentropy'
 ACTIVATION_LAYER = 'softmax'
 # Adam: Stochastic gradient descent method that is based on adaptive estimation of first-order and second-order moments.
 # RMSprop: Moving average of the square of gradients. Divide the gradient by the root of this average.
-OPTIMIZER = 'adam'
+OPTIMIZER = 'RMSprop'
 # Save checkpoints while training.
 USE_CHECKPOINTS = True
 # Total number of steps before declaring one epoch finished. By default value is: None
