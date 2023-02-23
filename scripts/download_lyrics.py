@@ -40,6 +40,10 @@ DetectorFactory.seed = 0
 class Lyrics():
     def __init__(self):
         
+        # Genius Token --------------------------------------------------------------------------- #
+        # You need genius client access token to use this script
+        self.genius_token = 'YOUR GENIUS TOKEN HERE'
+        
         # Artist Name And ID --------------------------------------------------------------------- #
         self.artist_name = 'Nirvana'
         # Use also artist ID if result is wrong artist
@@ -92,7 +96,7 @@ class Lyrics():
     # Download Lyrics ---------------------------------------------------------------------------- #    
     def download_lyrics(self, artist_id = None):
         if not os.path.exists(self.json_filename):
-            genius = Genius('YOUR GENIUS TOKEN HERE')
+            genius = Genius(self.genius_token)
             genius.remove_section_headers = True
             genius.response_format = 'plain'
             artist = genius.search_artist(artist_name=self.artist_name ,artist_id=self.artist_id, sort="title")
