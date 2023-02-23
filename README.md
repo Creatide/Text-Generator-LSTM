@@ -62,6 +62,17 @@ When the gates of secrets to be flee.
 ```
 # Install
 
+## Requirements
+
+I've been running this script on the following setup:
+Windows 11 
+Ubuntu 22.10 (via WSL)
+Python: 3.10.9
+Numpy: 1.24.2
+Keras: 2.11.0
+
+## Install Commands
+
 To run Keras using a GPU, follow the instructions 2A. section for GPU installation. However, if you wish to use a CPU, use the CPU commands from section 2B. instead.
 
 **1. (Optional, Windows) Install WSL, Ubuntu and Anaconda**
