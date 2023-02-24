@@ -218,6 +218,39 @@ RESTORE_BEST_WEIGHTS = True
 TRAIN_PATIENCE = 6
 MONITOR_METRIC = 'val_loss'
 ```
+**Here are some notes that I've gathered while studying about training parameters:**
+
+* **SEQUENCE_LENGTH**: The length of the input sequences used for training the model. This should be set to a value that makes sense for your data. In general, shorter sequences will make the model train faster but may result in lower accuracy, while longer sequences may take longer to train but may result in higher accuracy. A good rule of thumb is to start with a sequence length of 64-128 and adjust as needed.
+
+* **STEP_SIZE**: The step size between the sequences used for training the model. This should be set to a value that makes sense for your data. A smaller step size will result in more sequences and may improve accuracy, but will also increase training time. A good rule of thumb is to start with a step size of 2-5.
+
+* **BATCH_SIZE**: The number of training examples used in one forward/backward pass of the model. This value should be set based on the available memory on your machine. A larger batch size can result in faster training, but may require more memory. A good rule of thumb is to start with a batch size of 32-128.
+
+* **EPOCHS**: The number of iterations over the entire training data set. This value depends on the complexity of your data and the desired level of accuracy. In general, a larger number of epochs will result in higher accuracy, but may also increase the risk of overfitting. A good rule of thumb is to start with 10–20 epochs and adjust as needed.
+
+* **LEARNING_RATE**: The rate at which the model updates its weights during training. This value should be set based on the complexity of your data and the desired level of accuracy. A higher learning rate can result in faster convergence, but may also result in overshooting the optimal weights. A good rule of thumb is to start with a learning rate of 0.001 and adjust as needed.
+
+* **LSTM_LAYERS**: The number and size of LSTM layers in the model. This value depends on the complexity of your data and the desired level of accuracy. In general, a larger number of layers and/or larger layer sizes can result in higher accuracy, but may also increase the risk of overfitting. A good rule of thumb is to start with 1–2 layers with 64–256 units each and adjust as needed.
+
+* **DROPOUT_LAYERS**: The dropout rate to use after each LSTM layer to prevent overfitting. This value should be set based on the risk of overfitting in your model. A higher dropout rate can result in less overfitting, but may also reduce accuracy. A good rule of thumb is to start with a dropout rate of 0.2 and adjust as needed.
+
+* **DENSE_LAYERS**: The number and size of dense layers in the model. This value depends on the complexity of your data and the desired level of accuracy. In general, adding dense layers can improve accuracy, but may also increase the risk of overfitting. A good rule of thumb is to start with 1-2 and start with a small number of units, such as 64 or 128, and gradually increase the number if necessary. Adding more units can increase the capacity of the model and potentially improve accuracy, but may also increase the risk of overfitting.
+
+* **LOSS_FUNCTION**: The quantity that the model should seek to minimize during training. This value should be set based on the type of problem you are trying to solve. A good rule of thumb is to use `categorical_crossentropy` for multi-class classification problems.
+
+* **ACTIVATION_LAYER**: The activation function to use on the output layer. This value should be set based on the type of problem you are trying to solve. A good rule of thumb is to use `softmax` for multi-class classification problems.
+
+* **OPTIMIZER**: The optimization algorithm to use during
+  * `Adam`: The Adam optimizer is a good general-purpose optimizer that works well for many types of models and datasets. It's a popular choice and generally a safe bet.
+  * `RMSprop`: If Adam is causing convergence issues or instability, RMSprop is a good alternative. It's less aggressive than Adam and can be more stable, especially for recurrent neural networks like LSTMs.
+  * `Stochastic Gradient Descent` (SGD) with momentum: If you have a lot of data and a lot of parameters, stochastic gradient descent (SGD) with momentum can work well. It's a bit slower than Adam and RMSprop, but can converge well with large amounts of data.
+  * Tune the learning rate: No matter which optimizer you choose, it's important to tune the learning rate for your specific problem. A learning rate that's too high can cause the optimizer to diverge, while a learning rate that's too low can cause slow convergence.
+  
+* **USE_VALIDATION**: A portion of the training data will be held out and used for validation to assess the model's performance on unseen data. This helps to determine the model's suitability for deployment. By default, this is set to True.
+
+* **VALIDATION_SPLIT**: The proportion of training data to use for validation. If this parameter is set to 0.2, then 20% of the training data will be used for validation, and the remaining 80% will be used for training. A good rule of thumb is to set this to 0.1-0.3.
+
+* **REDUCE_LR_STUCK_FACTOR**: A parameter that controls the learning rate reduction strategy. When the model's performance on the validation set stops improving, the learning rate will be reduced by a factor of REDUCE_LEARNING_RATE_STUCK_FACTOR (e.g., if this parameter is set to 0.5, then the learning rate will be reduced by half). Set this parameter to None or 0 to disable this feature. A good rule of thumb is to set this to 0.1-0.5.
 
 # Use TensorBoard
 
