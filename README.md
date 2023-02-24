@@ -240,7 +240,7 @@ MONITOR_METRIC = 'val_loss'
 
 * **ACTIVATION_LAYER**: The activation function to use on the output layer. This value should be set based on the type of problem you are trying to solve. A good rule of thumb is to use `softmax` for multi-class classification problems.
 
-* **OPTIMIZER**: The optimization algorithm to use during
+* **OPTIMIZER**: The optimization algorithms:
   * `Adam`: The Adam optimizer is a good general-purpose optimizer that works well for many types of models and datasets. It's a popular choice and generally a safe bet.
   * `RMSprop`: If Adam is causing convergence issues or instability, RMSprop is a good alternative. It's less aggressive than Adam and can be more stable, especially for recurrent neural networks like LSTMs.
   * `Stochastic Gradient Descent` (SGD) with momentum: If you have a lot of data and a lot of parameters, stochastic gradient descent (SGD) with momentum can work well. It's a bit slower than Adam and RMSprop, but can converge well with large amounts of data.
