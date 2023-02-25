@@ -218,7 +218,7 @@ RESTORE_BEST_WEIGHTS = True
 TRAIN_PATIENCE = 6
 MONITOR_METRIC = 'val_loss'
 ```
-**Here are some notes that I've gathered while studying about training parameters:**
+**Some "Rule of Thumb" notes that I've gathered while studying about training parameters:**
 
 * **SEQUENCE_LENGTH**: The length of the input sequences used for training the model. This should be set to a value that makes sense for your data. In general, shorter sequences will make the model train faster but may result in lower accuracy, while longer sequences may take longer to train but may result in higher accuracy. A good rule of thumb is to start with a sequence length of 64-128 and adjust as needed.
 
@@ -232,7 +232,7 @@ MONITOR_METRIC = 'val_loss'
 
 * **LSTM_LAYERS**: The number and size of LSTM layers in the model. This value depends on the complexity of your data and the desired level of accuracy. In general, a larger number of layers and/or larger layer sizes can result in higher accuracy, but may also increase the risk of overfitting. A good rule of thumb is to start with 1–2 layers with 64–256 units each and adjust as needed.
 
-* **DROPOUT_LAYERS**: The dropout rate to use after each LSTM layer to prevent overfitting. This value should be set based on the risk of overfitting in your model. A higher dropout rate can result in less overfitting, but may also reduce accuracy. A good rule of thumb is to start with a dropout rate of 0.2 and adjust as needed.
+* **DROPOUT_LAYERS**: The dropout rate to use to prevent overfitting. This value should be set based on the risk of overfitting in your model. A higher dropout rate can result in less overfitting, but may also reduce accuracy. A good rule of thumb is to start with a dropout rate of 0.2 and adjust as needed.
 
 * **DENSE_LAYERS**: The number and size of dense layers in the model. This value depends on the complexity of your data and the desired level of accuracy. In general, adding dense layers can improve accuracy, but may also increase the risk of overfitting. A good rule of thumb is to start with 1-2 and start with a small number of units, such as 64 or 128, and gradually increase the number if necessary. Adding more units can increase the capacity of the model and potentially improve accuracy, but may also increase the risk of overfitting.
 
@@ -250,7 +250,7 @@ MONITOR_METRIC = 'val_loss'
 
 * **VALIDATION_SPLIT**: The proportion of training data to use for validation. If this parameter is set to 0.2, then 20% of the training data will be used for validation, and the remaining 80% will be used for training. A good rule of thumb is to set this to 0.1-0.3.
 
-* **REDUCE_LR_STUCK_FACTOR**: A parameter that controls the learning rate reduction strategy. When the model's performance on the validation set stops improving, the learning rate will be reduced by a factor of REDUCE_LEARNING_RATE_STUCK_FACTOR (e.g., if this parameter is set to 0.5, then the learning rate will be reduced by half). Set this parameter to None or 0 to disable this feature. A good rule of thumb is to set this to 0.1-0.5.
+* **REDUCE_LR_STUCK_FACTOR**: A parameter that controls the learning rate reduction strategy. When the model's performance on the validation set stops improving, the learning rate will be reduced by this factor (e.g., if this parameter is set to 0.5, then the learning rate will be reduced by half). A good rule of thumb is to set this to 0.1-0.5.
 
 # Use TensorBoard
 
