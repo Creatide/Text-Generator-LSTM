@@ -8,7 +8,6 @@ __pycache__/
 
 # Debugging
 debug/
-data/
 results/
 
 # Distribution / packaging
