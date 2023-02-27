@@ -12,7 +12,7 @@ data/
 results/
 
 # Dracula example data
-!data/texts/Dracula/*
+!*data/texts/Dracula/
 
 # Distribution / packaging
 .Python
