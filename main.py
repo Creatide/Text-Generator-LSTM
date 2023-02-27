@@ -34,6 +34,8 @@ from pathlib import Path
 
 from tensorflow import keras
 from keras import layers
+from keras import regularizers
+from keras import backend
 
 import constants as c
 
@@ -87,7 +89,7 @@ class TextGenerator:
         # Dont load models while generating text in other modes
         if self.arguments['generate']:
             self.load_model_file()     
-            self.prepare_data()
+            self.prepare_characters()
         
         # Check if there is texts available, if not use randomly generated string,
         # Just in case if user not provide any primer text
@@ -162,7 +164,9 @@ class TextGenerator:
         for k, v in self.arguments.items():
             print(k + ':', v)
         
-        self.prepare_data()
+        self.prepare_characters()
+        self.prepare_training_data()
+        
         # If model with same name found, load it
         if self.model_found: 
             self.load_model_file() 
@@ -185,7 +189,8 @@ class TextGenerator:
                        
         self.save_text_file(print_output, path=c.PATH_RESULTS_FOLDER, name="evaluate_training", merge_results=True)
         
-        self.prepare_data()
+        self.prepare_characters()
+        self.prepare_training_data()
         
         # If model with same name found, load it
         if self.model_found: 
@@ -221,16 +226,16 @@ class TextGenerator:
     # PREPARE & POST PROCESS                                                                       #
     # ============================================================================================ #    
     
-    # Prepare Data For Training ------------------------------------------------------------------ #
-    def prepare_data(self):
-        
+    
+    def prepare_characters(self):        
         if not self.process_status: print('TEXT INFO:')
-        
-        if self.arguments['primer']:
+                
+        if self.arguments['primer'] or self.arguments['generate']:
             self.primer = self.clean_string(self.arguments['primer'])
-            if not self.process_status: print('Primer Text:', self.primer)
-        
-        self.text = self.get_texts(self.arguments['items'])
+            self.text = self.primer
+        else:
+            self.text = self.get_texts(self.arguments['items'])
+            
         if not self.process_status: print('Corpus Length:', len(self.text))
         
         # Get text characters and compare to allowed_characters
@@ -254,6 +259,8 @@ class TextGenerator:
         self.character_indices = dict((c, i) for i, c in enumerate(self.characters))
         self.indices_character = dict((i, c) for i, c in enumerate(self.characters))
         
+    # Prepare Data For Training ------------------------------------------------------------------ #
+    def prepare_training_data(self):
         sentences = []
         self.next_characters = []
         for i in range(0, len(self.text) - self.arguments['sequence_length'], self.arguments['step_size']):
@@ -286,8 +293,17 @@ class TextGenerator:
         activation_types = ['linear', 'softmax', 'relu', 'sigmoid', 'tanh', 'softplus', 'softsign', 'selu', 'elu', 'exponential' ]
         
         self.model = keras.Sequential()        
-        # Add input
+        
+        # Create regularizers for layers (0 == disabled, keras default == 0.01)
+        lstm_regularizers = regularizers.L1L2(l1=self.arguments['l1'], l2=self.arguments['l2'])
+        dense_regularizers = regularizers.L1L2(l1=self.arguments['l1'], l2=self.arguments['l2'])
+        
+        # Add input layer
         self.model.add(keras.Input(shape=(self.arguments['sequence_length'], len(self.characters))))
+        
+        # Add 1D convolutional layer
+        # self.model.add(layers.Conv1D(filters=32, kernel_size=3, activation='relu', input_shape=(self.arguments['sequence_length'], len(self.characters))))
+        # self.model.add(layers.MaxPooling1D(pool_size=2))
         
         # LSTM layers
         # If user provided only single values without square brackets, convert it to list
@@ -297,9 +313,9 @@ class TextGenerator:
             for i, value in enumerate(self.arguments['lstm_layers']):
                 # Last element in list should not return_sequences
                 if i == len(self.arguments['lstm_layers']) - 1:
-                    self.model.add(layers.LSTM(value))
+                    self.model.add(layers.LSTM(value, kernel_regularizer=lstm_regularizers))
                 else:                    
-                    self.model.add(layers.LSTM(value, return_sequences=True))                    
+                    self.model.add(layers.LSTM(value, kernel_regularizer=lstm_regularizers, return_sequences=True))                    
                 print(f'LSTM layer {i+1} added with value of {value} units.')
                 
                 # Add Dropout layers after each LSTM layer if user provided value
@@ -314,8 +330,8 @@ class TextGenerator:
         # Create multiple Dense layers if user provided list
         if isinstance(self.arguments['dense_layers'], list) and len(self.arguments['dense_layers']):
             for i, value in enumerate(self.arguments['dense_layers']):
-                if value in activation_types:
-                    self.model.add(layers.Dense(len(self.characters), activation=value))
+                if value in activation_types:                    
+                    self.model.add(layers.Dense(len(self.characters), activation=value, kernel_regularizer=dense_regularizers))
                     print(f"Dense layer {i+1} added with layer '{value}' activation function.")
             
         # Activation layer
@@ -328,7 +344,8 @@ class TextGenerator:
             optimizer = keras.optimizers.RMSprop(learning_rate=self.arguments['learning_rate'])
         
         # Compile model
-        self.model.compile(loss=self.arguments['loss_function'], optimizer=optimizer, metrics=['accuracy'])
+        use_perplexity = self.perplexity if self.arguments['perplexity'] else None
+        self.model.compile(loss=self.arguments['loss_function'], optimizer=optimizer, metrics=[self.arguments['monitor_metric'], use_perplexity])
     
     
     # Build The Model: Fit Model Function -------------------------------------------------------- #
@@ -359,7 +376,8 @@ class TextGenerator:
             model_callback.append(keras.callbacks.EarlyStopping(
                 monitor=self.arguments['monitor_metric'], 
                 patience=self.arguments['train_patience'], 
-                verbose=1, 
+                verbose=1,
+                min_delta = 0.01,
                 restore_best_weights=self.arguments['restore_best_weights']
                 ))
                 
@@ -395,6 +413,14 @@ class TextGenerator:
         preds = exp_preds / np.sum(exp_preds)
         probas = np.random.multinomial(1, preds, 1)
         return np.argmax(probas)
+    
+    
+    # Calculate Perplexity During Training ------------------------------------------------------- #
+    # https://stackoverflow.com/a/53564032/1629596
+    def perplexity(self, y_true, y_pred):
+        cross_entropy = backend.categorical_crossentropy(y_true, y_pred)
+        perplexity = backend.exp(cross_entropy)
+        return perplexity
     
     
     # Get Texts From Data For Traning and Generating Random Primer Text Sample ------------------- #
@@ -542,7 +568,7 @@ class TextGenerator:
                 for k, v in self.arguments.items():
                     print(k + ':', v)
         else:
-            print('WARNING: ' + model_file_path + '.json' + ' is file missing. Cannot load training arguments.')
+            print('WARNING: ' + model_file_path + '.json' + ' file is missing. Cannot load training arguments.')
     
     
     # Update Existing Dictionary With New Values ------------------------------------------------- #
@@ -883,6 +909,8 @@ def main():
         'learning_rate': c.LEARNING_RATE,
         'lstm_layers': c.LSTM_LAYERS,
         'dense_layers': c.DENSE_LAYERS,
+        'l1': c.REGULARIZER_L1,
+        'l2': c.REGULARIZER_L2,
         'dropout_layers': c.DROPOUT_LAYERS,
         'validation': c.USE_VALIDATION,
         'validation_split': c.VALIDATION_SPLIT,
@@ -891,6 +919,7 @@ def main():
         'loss_function': c.LOSS_FUNCTION,
         'early_stopping': c.USE_EARLY_STOPPING,
         'monitor_metric': c.MONITOR_METRIC,
+        'perplexity': c.USE_PERPLEXITY_METRIC,
         'train_patience': c.TRAIN_PATIENCE,
         'restore_best_weights': c.RESTORE_BEST_WEIGHTS,
         'reduce_lr_stuck_factor': c.REDUCE_LR_STUCK_FACTOR,
