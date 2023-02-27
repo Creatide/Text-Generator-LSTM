@@ -11,6 +11,9 @@ debug/
 data/
 results/
 
+# Dracula example data
+!data/texts/Dracula/*
+
 # Distribution / packaging
 .Python
 build/

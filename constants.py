@@ -96,7 +96,7 @@ USE_TENSORBOARD = True
 USE_VALIDATION = True
 # Split training data into two parts, one for training and one for evaluating performance.
 # For example, if the value is 0.2, then 20% of the training data will be used for validation.
-VALIDATION_SPLIT = 0.3
+VALIDATION_SPLIT = 0.2
 # Reduce learning rate when a metric has stopped improving. (new_lr = lr * factor.)
 # Set None or 0 to disable this feature
 REDUCE_LR_STUCK_FACTOR = 0.2
