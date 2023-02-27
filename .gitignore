@@ -13,6 +13,8 @@ results/
 
 # Dracula example data
 !data/texts/Dracula/*
+!data/texts/Dracula/Dracula.txt
+!data/texts/Dracula/info.json
 
 # Distribution / packaging
 .Python
