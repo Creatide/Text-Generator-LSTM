@@ -549,7 +549,10 @@ class TextGenerator:
         if self.arguments['generate']:
             self.model = keras.models.load_model(model_file_path, compile=False)
         else:
-            self.model = keras.models.load_model(model_file_path, compile=True)
+            if self.arguments['perplexity']:
+                self.model = keras.models.load_model(model_file_path, compile=True, custom_objects={"perplexity": self.perplexity})
+            else:
+                self.model = keras.models.load_model(model_file_path, compile=True)        
     
         # Check if model json file exist, even it doesn't needed for loading
         if os.path.exists(model_file_path + '.json'):
