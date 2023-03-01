@@ -301,6 +301,12 @@ class TextGenerator:
         # Add input layer
         self.model.add(keras.Input(shape=(self.arguments['sequence_length'], len(self.characters))))
         
+        # Add embedding layer
+        if isinstance(self.arguments['embedding_layer'], int) and self.arguments['embedding_layer'] > 0:
+            self.model.add(layers.Embedding(input_dim=len(self.characters), output_dim=self.arguments['embedding_layer'], input_length=self.arguments['sequence_length']))        
+            # Reshape the input data after embedding layer to correct shape for LSTM layer
+            self.model.add(layers.Reshape((self.arguments['sequence_length'], -1)))
+        
         # Add 1D convolutional layer
         # self.model.add(layers.Conv1D(filters=32, kernel_size=3, activation='relu', input_shape=(self.arguments['sequence_length'], len(self.characters))))
         # self.model.add(layers.MaxPooling1D(pool_size=2))
@@ -344,8 +350,10 @@ class TextGenerator:
             optimizer = keras.optimizers.RMSprop(learning_rate=self.arguments['learning_rate'])
         
         # Compile model
-        use_perplexity = self.perplexity if self.arguments['perplexity'] else None
-        self.model.compile(loss=self.arguments['loss_function'], optimizer=optimizer, metrics=[self.arguments['monitor_metric'], use_perplexity])
+        if self.arguments['perplexity']:
+            self.model.compile(loss=self.arguments['loss_function'], optimizer=optimizer, metrics=[self.arguments['monitor_metric'], self.perplexity])
+        else:
+            self.model.compile(loss=self.arguments['loss_function'], optimizer=optimizer, metrics=[self.arguments['monitor_metric']])
     
     
     # Build The Model: Fit Model Function -------------------------------------------------------- #
@@ -374,7 +382,7 @@ class TextGenerator:
         
         if self.arguments['early_stopping']:
             model_callback.append(keras.callbacks.EarlyStopping(
-                monitor=self.arguments['monitor_metric'], 
+                monitor=self.arguments['early_stopping_monitor'], 
                 patience=self.arguments['train_patience'], 
                 verbose=1,
                 min_delta = 0.01,
@@ -912,6 +920,7 @@ def main():
         'learning_rate': c.LEARNING_RATE,
         'lstm_layers': c.LSTM_LAYERS,
         'dense_layers': c.DENSE_LAYERS,
+        'embedding_layer': c.EMBEDDING_LAYER,
         'l1': c.REGULARIZER_L1,
         'l2': c.REGULARIZER_L2,
         'dropout_layers': c.DROPOUT_LAYERS,
@@ -921,6 +930,7 @@ def main():
         'steps_per_epoch': c.STEPS_PER_EPOCH,
         'loss_function': c.LOSS_FUNCTION,
         'early_stopping': c.USE_EARLY_STOPPING,
+        'early_stopping_monitor': c.EARLY_STOPPING_MONITOR,
         'monitor_metric': c.MONITOR_METRIC,
         'perplexity': c.USE_PERPLEXITY_METRIC,
         'train_patience': c.TRAIN_PATIENCE,

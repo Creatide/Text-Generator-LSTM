@@ -30,7 +30,7 @@ MERGE_RESULTS = True
 # Stylize text output to more readable format e.g. separate sentences to new lines.
 TEXT_FORMATTING = True
 # Use spellchecker for English by default. Supported languages: https://pyspellchecker.readthedocs.io
-USE_SPELLCHECKER = False
+USE_SPELLCHECKER = True
 
 # ================================================================================================ #
 # TRAINING PROCESS                                                                                 #
@@ -40,15 +40,15 @@ USE_SPELLCHECKER = False
 
 # The length of the input sequences used for training the model.
 # High value could cause 'Dst tensor is not initialized' https://stackoverflow.com/a/40389498/1629596
-SEQUENCE_LENGTH = 64
+SEQUENCE_LENGTH = 40
 # The step size between the sequences used for training the model.
 STEP_SIZE = 3
 # The number of training examples used in one forward/backward pass of the model.
-BATCH_SIZE = 512
+BATCH_SIZE = 256
 # The number of iterations over the entire training data set.
 EPOCHS = 1000
 # The rate at which the model updates its weights during training.
-LEARNING_RATE = 0.0001
+LEARNING_RATE = 0.0002
 # The number is unit size of each LSTM layer of the model.
 # Set multiple LSTM layers to model by using list, e.g. three different size of LSTM layers [256, 128]
 # Note that you need at least one LSTM layer to create model
@@ -61,14 +61,18 @@ DROPOUT_LAYERS = 0.32
 # Leave list to empty if you want to disable dense layers
 # Keras default dense layer activation is 'linear', other commonly used is 'relu', 'sigmoid', 'softmax'
 # List of all available activations in keras https://keras.io/api/layers/activations/
-# e.g.: 'linear', 'relu'
+# e.g.: 'linear', 'relu', 'softmax'
 DENSE_LAYERS = ['relu']
+# The embedding layer in deep learning maps the input data into a lower-dimensional vector space where 
+# similar words or features are closer to each other.
+# e.g.: 32, 0 = disabled
+EMBEDDING_LAYER = 64
 # L1 and L2 regularizers are prevent overfitting. They adding a penalty term to the loss function. 
 # L1: Encourages the model to learn sparse patterns, where many of the weights are zero.
 # L2: Encourages the model to learn smaller weights overall, which can help to prevent overfitting. 
 # L2 regularization is also known as weight decay, because it causes the weights to decay towards zero over time.
-REGULARIZER_L1 = 0.00001
-REGULARIZER_L2 = 0.00001
+REGULARIZER_L1 = 0.000001
+REGULARIZER_L2 = 0.000001
 # Computes the crossentropy loss between the labels and predictions.
 # https://keras.io/api/losses/, https://neptune.ai/blog/keras-loss-functions
 # Example: categorical_crossentropy, binary_crossentropy
@@ -103,6 +107,7 @@ REDUCE_LR_STUCK_FACTOR = 0.2
 # Perplexity measures how well a model predicts the next word in a sequence, given the previous words. A lower perplexity 
 # score indicates that the model is better at predicting the next word, while a higher perplexity score indicates that the 
 # model is less accurate. This value is only for debugging to see perplexity value.
+# Note: If you train your model using perplexity and continue training later on, you must ensure that this is enabled!
 USE_PERPLEXITY_METRIC = True
 # Evaluate training mode temperatures that will be used for generation phase
 # This affects only to generated example texts temperatures while in evaluate mode
@@ -112,12 +117,17 @@ EVALUATE_TEMPERATURES = [0.5, 0.8, 1.0]
 
 # Stop training when a monitored metric has stopped improving.
 USE_EARLY_STOPPING = True
+# During training, the EarlyStopping callback continuously monitors the quantity
+# Training process stops when it detects that the monitored quantity has stopped improving.
+# e.g.: 'loss', 'accuracy', 'val_loss', 'val_accuracy',
+EARLY_STOPPING_MONITOR = 'accuracy'
 # Restore model weights from the epoch with the best value of the monitored quantity. 
 # If False, the model weights obtained at the last step of training are used. 
 RESTORE_BEST_WEIGHTS = True
 # Number of epochs with no improvement after which training will be stopped if early stopping is activated.
 TRAIN_PATIENCE = 10
-# During training, the EarlyStopping callback continuously monitors the quantity
-# Training process stops when it detects that the monitored quantity has stopped improving.
+# Metric for monitoring the training progress of a model during training. The metric is evaluated on the 
+# validation set after each epoch and can be used to determine when to stop training if the performance on 
+# the validation set stops improving. 
 # e.g.: 'accuracy'
 MONITOR_METRIC = 'accuracy'
