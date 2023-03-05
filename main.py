@@ -289,29 +289,38 @@ class TextGenerator:
     # Build The Model: A Single LSTM Layer ------------------------------------------------------- #
     def model_build(self):
         
+        self.model = keras.Sequential()
+        
         # https://keras.io/api/layers/activations/
         activation_types = ['linear', 'softmax', 'relu', 'sigmoid', 'tanh', 'softplus', 'softsign', 'selu', 'elu', 'exponential' ]
-        
-        self.model = keras.Sequential()        
         
         # Create regularizers for layers (0 == disabled, keras default == 0.01)
         lstm_regularizers = regularizers.L1L2(l1=self.arguments['l1'], l2=self.arguments['l2'])
         dense_regularizers = regularizers.L1L2(l1=self.arguments['l1'], l2=self.arguments['l2'])
         
-        # Add input layer
+        # Optimizer: Select Adam of RMSprop optimizer
+        if self.arguments['optimizer'].lower() == 'adam':
+            optimizer = keras.optimizers.Adam(learning_rate=self.arguments['learning_rate'])
+        else:
+            optimizer = keras.optimizers.RMSprop(learning_rate=self.arguments['learning_rate'])        
+        
+        # --------------------------------------------- #
+        # LAYERS:                                       #
+        # --------------------------------------------- #
+        
+        # Input Layer
+        # -----------------------------------------------
         self.model.add(keras.Input(shape=(self.arguments['sequence_length'], len(self.characters))))
         
-        # Add embedding layer
+        # Embedding Layer
+        # -----------------------------------------------
         if isinstance(self.arguments['embedding_layer'], int) and self.arguments['embedding_layer'] > 0:
             self.model.add(layers.Embedding(input_dim=len(self.characters), output_dim=self.arguments['embedding_layer'], input_length=self.arguments['sequence_length']))        
             # Reshape the input data after embedding layer to correct shape for LSTM layer
             self.model.add(layers.Reshape((self.arguments['sequence_length'], -1)))
         
-        # Add 1D convolutional layer
-        # self.model.add(layers.Conv1D(filters=32, kernel_size=3, activation='relu', input_shape=(self.arguments['sequence_length'], len(self.characters))))
-        # self.model.add(layers.MaxPooling1D(pool_size=2))
-        
-        # LSTM layers
+        # LSTM Layers
+        # -----------------------------------------------
         # If user provided only single values without square brackets, convert it to list
         self.arguments['lstm_layers'] = self.arguments['lstm_layers'] if isinstance(self.arguments['lstm_layers'], list) else [int(self.arguments['lstm_layers'])]
         # Create multiple LSTM layers if user provided list
@@ -321,39 +330,96 @@ class TextGenerator:
                 if i == len(self.arguments['lstm_layers']) - 1:
                     self.model.add(layers.LSTM(value, kernel_regularizer=lstm_regularizers))
                 else:                    
-                    self.model.add(layers.LSTM(value, kernel_regularizer=lstm_regularizers, return_sequences=True))                    
-                print(f'LSTM layer {i+1} added with value of {value} units.')
+                    self.model.add(layers.LSTM(value, kernel_regularizer=lstm_regularizers, return_sequences=True))
                 
                 # Add Dropout layers after each LSTM layer if user provided value
                 dropout_rate = self.clamp_number(self.arguments['dropout_layers'], 0, 1, 2)
                 if dropout_rate:
                     self.model.add(layers.Dropout(dropout_rate))
-                    print(f'Dropout layer {i+1} added with value of {dropout_rate} units.')
         
-        # Dense layers
+        # Conv1D Layers
+        # -----------------------------------------------
+        if self.arguments['conv_layers'] != False or self.arguments['conv_layers'] != None:
+            
+            if isinstance(self.arguments['conv_layers'], list):
+                conv_layers = self.arguments['conv_layers']
+            elif isinstance(self.arguments['conv_layers'], tuple):
+                conv_layers = list(self.arguments['conv_layers'])
+            elif isinstance(self.arguments['conv_layers'], str):
+                conv_layers = self.arguments['conv_layers'].split(',')
+            
+            if isinstance(conv_layers, list) and len(conv_layers):
+                filters, kernel, activation, strides = 64, 3, 'relu', 1
+                # Reshape for first conv layer and get size from last LSTM layer to prepare data for Conv1D
+                self.model.add(layers.Reshape((self.arguments['lstm_layers'][-1], -1)))
+                
+                def create_conv_layer(filters_value=filters, kernel_value=kernel, activation_value=activation, strides_value=strides):
+                    # Apply same layer to each temporal slice of an input tensor, which is useful for processing sequences of vectors or sequences of sequences.
+                    # self.model.add(layers.TimeDistributed(layers.Dense(64, activation='relu')))
+                    self.model.add(layers.Conv1D(filters=filters_value, kernel_size=kernel_value, activation=activation_value, strides=strides_value))
+                    
+                # Check multidimension from list
+                if isinstance(conv_layers[0], list) and len(conv_layers[0]):   
+                    for lst in conv_layers:
+                        for i, value in enumerate(lst):
+                            filters = value if i == 0 else filters
+                            kernel = value if i == 1 else kernel
+                            activation = value if i == 2 else activation
+                            strides = value if i == 3 else strides
+                        create_conv_layer(filters, kernel, activation, strides)
+                else:
+                    for i, value in enumerate(conv_layers):
+                        filters = value if i == 0 else filters
+                        kernel = value if i == 1 else kernel
+                        activation = value if i == 2 else activation
+                        strides = value if i == 3 else strides
+                    create_conv_layer(filters, kernel, activation, strides)
+                
+                # Pooling operations, which help to reduce the dimensionality of the input feature maps while retaining the most important information.
+                # self.model.add(layers.MaxPooling1D(pool_size=3))
+                self.model.add(layers.GlobalMaxPooling1D())
+        
+        # Conv1D Layer 1
+        # -----------------------------------------------
+        # Reshape last LSTM layer to prepare for Conv1D
+        # self.model.add(layers.Reshape((self.arguments['lstm_layers'][-1], -1)))
+        # self.model.add(layers.TimeDistributed(layers.Dense(64, activation='relu')))
+        # self.model.add(layers.Conv1D(filters=64, kernel_size=8, activation='relu', strides=1))
+        
+        # Pooling Layers
+        # -----------------------------------------------
+        # self.model.add(layers.MaxPooling1D(pool_size=3))
+        # self.model.add(layers.GlobalAveragePooling1D())
+        
+        # Conv1D Layer 2
+        # -----------------------------------------------
+        # self.model.add(layers.Conv1D(filters=128, kernel_size=4, activation='relu', strides=1))
+        # self.model.add(layers.GlobalMaxPooling1D())
+        
+        # Dense Layers
+        # -----------------------------------------------
         # If user provided only single values without square brackets, convert it to list
         self.arguments['dense_layers'] = self.arguments['dense_layers'] if isinstance(self.arguments['dense_layers'], list) else [str(self.arguments['dense_layers'])]
         # Create multiple Dense layers if user provided list
         if isinstance(self.arguments['dense_layers'], list) and len(self.arguments['dense_layers']):
             for i, value in enumerate(self.arguments['dense_layers']):
-                if value in activation_types:                    
+                if value in activation_types:
+                    # ? Add batch normalization before each dense layer
+                    # self.model.add(layers.BatchNormalization())
                     self.model.add(layers.Dense(len(self.characters), activation=value, kernel_regularizer=dense_regularizers))
-                    print(f"Dense layer {i+1} added with layer '{value}' activation function.")
             
-        # Activation layer
+        # Activation Layer
+        # -----------------------------------------------
         self.model.add(layers.Activation(self.arguments['activation_layer']))
-        
-        # Optimizer: Select Adam of RMSprop optimizer
-        if self.arguments['optimizer'].lower() == 'adam':
-            optimizer = keras.optimizers.Adam(learning_rate=self.arguments['learning_rate'])
-        else:
-            optimizer = keras.optimizers.RMSprop(learning_rate=self.arguments['learning_rate'])
         
         # Compile model
         if self.arguments['perplexity']:
             self.model.compile(loss=self.arguments['loss_function'], optimizer=optimizer, metrics=[self.arguments['monitor_metric'], self.perplexity])
         else:
             self.model.compile(loss=self.arguments['loss_function'], optimizer=optimizer, metrics=[self.arguments['monitor_metric']])
+        
+        # Output model summary    
+        self.model.summary()
     
     
     # Build The Model: Fit Model Function -------------------------------------------------------- #
@@ -920,6 +986,7 @@ def main():
         'learning_rate': c.LEARNING_RATE,
         'lstm_layers': c.LSTM_LAYERS,
         'dense_layers': c.DENSE_LAYERS,
+        'conv_layers': c.CONVOLUTIONAL_LAYERS,
         'embedding_layer': c.EMBEDDING_LAYER,
         'l1': c.REGULARIZER_L1,
         'l2': c.REGULARIZER_L2,
