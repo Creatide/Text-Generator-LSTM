@@ -67,7 +67,7 @@ CONVOLUTIONAL_LAYERS = [32, 6], [64, 3]
 # Keras default dense layer activation is 'linear', other commonly used is 'relu', 'sigmoid', 'softmax'
 # List of all available activations in keras https://keras.io/api/layers/activations/
 # e.g.: 'linear', 'relu', 'softmax'
-DENSE_LAYERS = ['relu', 'relu']
+DENSE_LAYERS = ['relu']
 # The embedding layer in deep learning maps the input data into a lower-dimensional vector space where
 # similar words or features are closer to each other.
 # e.g.: 32, 0 = disabled
@@ -133,7 +133,7 @@ RESTORE_BEST_WEIGHTS = True
 TRAIN_PATIENCE = 10
 # EarlyStopping with min_delta monitors the change in the monitored metric and stops the training process
 # when the change is less than the specified min_delta value. Default is 0
-EARLY_STOP_MIN_DELTA = 0.001
+EARLY_STOPPING_MIN_DELTA = 0.001
 # Metric for monitoring the training progress of a model during training. The metric is evaluated on the
 # validation set after each epoch and can be used to determine when to stop training if the performance on
 # the validation set stops improving.

@@ -437,11 +437,11 @@ class TextGenerator:
 
         if self.arguments['early_stopping']:
             model_callback.append(keras.callbacks.EarlyStopping(
-                monitor=self.arguments['early_stopping_monitor'],
-                patience=self.arguments['train_patience'],
-                verbose=1,
-                min_delta = 0.01,
-                restore_best_weights=self.arguments['restore_best_weights']
+                monitor = self.arguments['early_stopping_monitor'],
+                patience = self.arguments['train_patience'],
+                verbose = 1,
+                min_delta = self.arguments['early_stopping_mindelta'],
+                restore_best_weights = self.arguments['restore_best_weights']
                 ))
 
         if self.arguments['checkpoints']:
@@ -990,6 +990,7 @@ def main():
         'monitor_metric': c.MONITOR_METRIC,
         'perplexity': c.USE_PERPLEXITY_METRIC,
         'train_patience': c.TRAIN_PATIENCE,
+        'early_stopping_mindelta': c.EARLY_STOPPING_MIN_DELTA,
         'restore_best_weights': c.RESTORE_BEST_WEIGHTS,
         'reduce_lr_stuck_factor': c.REDUCE_LR_STUCK_FACTOR,
         'activation_layer': c.ACTIVATION_LAYER,
