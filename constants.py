@@ -24,7 +24,7 @@ GENERATE_TEXT_LENGTH = 400
 # Setting determines how many texts files the model will generate.
 GENERATE_TEXTS_COUNT = 1
 # Level of randomness in the generated output. "Higher = creative, lower = safe pick".
-TEMPERATURE = 0.6
+TEMPERATURE = 0.8
 # Export all generated lyrics to same text file per generation process.
 MERGE_RESULTS = True
 # Stylize text output to more readable format e.g. separate sentences to new lines.
@@ -40,7 +40,7 @@ USE_SPELLCHECKER = True
 
 # The length of the input sequences used for training the model.
 # High value could cause 'Dst tensor is not initialized' https://stackoverflow.com/a/40389498/1629596
-SEQUENCE_LENGTH = 40
+SEQUENCE_LENGTH = 128
 # The step size between the sequences used for training the model.
 STEP_SIZE = 3
 # The number of training examples used in one forward/backward pass of the model.
@@ -48,7 +48,7 @@ BATCH_SIZE = 256
 # The number of iterations over the entire training data set.
 EPOCHS = 1000
 # The rate at which the model updates its weights during training.
-LEARNING_RATE = 0.0002
+LEARNING_RATE = 0.001
 # The number is unit size of each LSTM layer of the model.
 # Set multiple LSTM layers to model by using list, e.g. three different size of LSTM layers [256, 128]
 # Note that you need at least one LSTM layer to create model
@@ -56,23 +56,28 @@ LSTM_LAYERS = [256, 256]
 # Dropout prevent overfitting. It randomly selected neurons are ignored during training.
 # Add dropout layer after every LSTM layer with chosen value between 0.0-1.0 (0.2 is 20%)
 # Disable dropout layers byt settings it to 0.
-DROPOUT_LAYERS = 0.32
+DROPOUT_LAYERS = 0.3
+# Convolutional is used to perform 1-dimensional convolutional operations on sequential data, such as 
+# time series or text data, and is commonly used in tasks such as feature extraction and sequence classification.
+# e.g. [[64, 8], [128, 4]] will create two conv1D layers. First value is filter size and second is kernel size.
+# e.g. If want to create only one layer, just use format [64, 8]
+CONVOLUTIONAL_LAYERS = False
 # You can se multiple dense layers by giving multiple activation functions e.g. ['linear', 'relu']
 # Leave list to empty if you want to disable dense layers
 # Keras default dense layer activation is 'linear', other commonly used is 'relu', 'sigmoid', 'softmax'
 # List of all available activations in keras https://keras.io/api/layers/activations/
 # e.g.: 'linear', 'relu', 'softmax'
-DENSE_LAYERS = ['relu']
+DENSE_LAYERS = ['relu', 'relu']
 # The embedding layer in deep learning maps the input data into a lower-dimensional vector space where 
 # similar words or features are closer to each other.
 # e.g.: 32, 0 = disabled
-EMBEDDING_LAYER = 64
+EMBEDDING_LAYER = 128
 # L1 and L2 regularizers are prevent overfitting. They adding a penalty term to the loss function. 
 # L1: Encourages the model to learn sparse patterns, where many of the weights are zero.
 # L2: Encourages the model to learn smaller weights overall, which can help to prevent overfitting. 
 # L2 regularization is also known as weight decay, because it causes the weights to decay towards zero over time.
-REGULARIZER_L1 = 0.000001
-REGULARIZER_L2 = 0.000001
+REGULARIZER_L1 = 0.00001
+REGULARIZER_L2 = 0.00001
 # Computes the crossentropy loss between the labels and predictions.
 # https://keras.io/api/losses/, https://neptune.ai/blog/keras-loss-functions
 # Example: categorical_crossentropy, binary_crossentropy

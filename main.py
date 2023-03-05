@@ -379,23 +379,6 @@ class TextGenerator:
                 # self.model.add(layers.MaxPooling1D(pool_size=3))
                 self.model.add(layers.GlobalMaxPooling1D())
         
-        # Conv1D Layer 1
-        # -----------------------------------------------
-        # Reshape last LSTM layer to prepare for Conv1D
-        # self.model.add(layers.Reshape((self.arguments['lstm_layers'][-1], -1)))
-        # self.model.add(layers.TimeDistributed(layers.Dense(64, activation='relu')))
-        # self.model.add(layers.Conv1D(filters=64, kernel_size=8, activation='relu', strides=1))
-        
-        # Pooling Layers
-        # -----------------------------------------------
-        # self.model.add(layers.MaxPooling1D(pool_size=3))
-        # self.model.add(layers.GlobalAveragePooling1D())
-        
-        # Conv1D Layer 2
-        # -----------------------------------------------
-        # self.model.add(layers.Conv1D(filters=128, kernel_size=4, activation='relu', strides=1))
-        # self.model.add(layers.GlobalMaxPooling1D())
-        
         # Dense Layers
         # -----------------------------------------------
         # If user provided only single values without square brackets, convert it to list
