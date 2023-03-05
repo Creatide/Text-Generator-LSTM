@@ -301,6 +301,8 @@ class TextGenerator:
         # Optimizer: Select Adam of RMSprop optimizer
         if self.arguments['optimizer'].lower() == 'adam':
             optimizer = keras.optimizers.Adam(learning_rate=self.arguments['learning_rate'])
+        elif self.arguments['optimizer'].lower() == 'sgd':
+            optimizer = keras.optimizers.SGD(learning_rate=self.arguments['learning_rate'])
         else:
             optimizer = keras.optimizers.RMSprop(learning_rate=self.arguments['learning_rate'])
 
@@ -339,8 +341,9 @@ class TextGenerator:
 
         # Conv1D Layers
         # -----------------------------------------------
-        if self.arguments['conv_layers'] != False or self.arguments['conv_layers'] != None:
-
+        if self.arguments['conv_layers'] == False or self.arguments['conv_layers'] == None:
+            pass
+        else:
             conv_layers = None
             if isinstance(self.arguments['conv_layers'], list):
                 conv_layers = self.arguments['conv_layers']

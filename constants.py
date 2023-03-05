@@ -40,11 +40,11 @@ USE_SPELLCHECKER = True
 
 # The length of the input sequences used for training the model.
 # High value could cause 'Dst tensor is not initialized' https://stackoverflow.com/a/40389498/1629596
-SEQUENCE_LENGTH = 128
+SEQUENCE_LENGTH = 64
 # The step size between the sequences used for training the model.
 STEP_SIZE = 3
 # The number of training examples used in one forward/backward pass of the model.
-BATCH_SIZE = 256
+BATCH_SIZE = 512
 # The number of iterations over the entire training data set.
 EPOCHS = 1000
 # The rate at which the model updates its weights during training.
@@ -56,12 +56,12 @@ LSTM_LAYERS = [256, 256]
 # Dropout prevent overfitting. It randomly selected neurons are ignored during training.
 # Add dropout layer after every LSTM layer with chosen value between 0.0-1.0 (0.2 is 20%)
 # Disable dropout layers byt settings it to 0.
-DROPOUT_LAYERS = 0.3
+DROPOUT_LAYERS = 0.2
 # Convolutional is used to perform 1-dimensional convolutional operations on sequential data, such as
 # time series or text data, and is commonly used in tasks such as feature extraction and sequence classification.
 # e.g. [[64, 8], [128, 4]] will create two conv1D layers. First value is filter size and second is kernel size.
 # e.g. If want to create only one layer, just use format [64, 8]
-CONVOLUTIONAL_LAYERS = [32, 6], [64, 3]
+CONVOLUTIONAL_LAYERS = False
 # You can se multiple dense layers by giving multiple activation functions e.g. ['linear', 'relu']
 # Leave list to empty if you want to disable dense layers
 # Keras default dense layer activation is 'linear', other commonly used is 'relu', 'sigmoid', 'softmax'
@@ -85,6 +85,7 @@ LOSS_FUNCTION = 'categorical_crossentropy'
 # Applies an activation function to an output.
 ACTIVATION_LAYER = 'softmax'
 # Adam: Stochastic gradient descent method that is based on adaptive estimation of first-order and second-order moments.
+# SGD: Gradient descent (with momentum) optimizer.
 # RMSprop: Moving average of the square of gradients. Divide the gradient by the root of this average.
 OPTIMIZER = 'adam'
 # Save checkpoints while training.
