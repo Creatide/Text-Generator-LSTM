@@ -341,12 +341,15 @@ class TextGenerator:
         # -----------------------------------------------
         if self.arguments['conv_layers'] != False or self.arguments['conv_layers'] != None:
             
+            conv_layers = None
             if isinstance(self.arguments['conv_layers'], list):
                 conv_layers = self.arguments['conv_layers']
             elif isinstance(self.arguments['conv_layers'], tuple):
                 conv_layers = list(self.arguments['conv_layers'])
-            elif isinstance(self.arguments['conv_layers'], str):
+            elif isinstance(self.arguments['conv_layers'], str) and ',' in self.arguments['conv_layers']:
                 conv_layers = self.arguments['conv_layers'].split(',')
+            elif isinstance(self.arguments['conv_layers'], (str, int)):
+                conv_layers = [self.arguments['conv_layers']]
             
             if isinstance(conv_layers, list) and len(conv_layers):
                 filters, kernel, activation, strides = 64, 3, 'relu', 1
@@ -401,7 +404,10 @@ class TextGenerator:
         else:
             self.model.compile(loss=self.arguments['loss_function'], optimizer=optimizer, metrics=[self.arguments['monitor_metric']])
         
-        # Output model summary    
+        # Output model summary
+        # for layer in self.model.layers:
+            # print(layer.name, layer.inbound_nodes, layer.outbound_nodes)
+            # print('Name:', layer.name, ' Type:', layer.__class__.__name__, 'Shape:', layer.output_shape)
         self.model.summary()
     
     
