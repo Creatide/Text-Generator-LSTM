@@ -393,8 +393,7 @@ class TextGenerator:
         if isinstance(self.arguments['dense_layers'], list) and len(self.arguments['dense_layers']):
             for i, value in enumerate(self.arguments['dense_layers']):
                 if value in activation_types:
-                    # ? Add batch normalization before each dense layer
-                    # self.model.add(layers.BatchNormalization())
+                    if self.arguments['batch_normalization']: self.model.add(layers.BatchNormalization())
                     self.model.add(layers.Dense(len(self.characters), activation=value, kernel_regularizer=dense_regularizers))
 
         # Activation Layer
@@ -438,13 +437,13 @@ class TextGenerator:
         # https://keras.io/api/callbacks/
         model_callback = []
 
-        if self.arguments['early_stopping']:
+        if self.arguments['early_stop']:
             model_callback.append(keras.callbacks.EarlyStopping(
-                monitor = self.arguments['early_stopping_monitor'],
+                monitor = self.arguments['early_stop_monitor'],
                 patience = self.arguments['train_patience'],
                 verbose = 1,
-                min_delta = self.arguments['early_stopping_mindelta'],
-                restore_best_weights = self.arguments['restore_best_weights']
+                min_delta = self.arguments['early_stop_mindelta'],
+                restore_best_weights = self.arguments['early_stop_best_weights']
                 ))
 
         if self.arguments['checkpoints']:
@@ -980,6 +979,7 @@ def main():
         'dense_layers': c.DENSE_LAYERS,
         'conv_layers': c.CONVOLUTIONAL_LAYERS,
         'embedding_layer': c.EMBEDDING_LAYER,
+        'batch_normalization': c.BATCH_NORMALIZATION,
         'l1': c.REGULARIZER_L1,
         'l2': c.REGULARIZER_L2,
         'dropout_layers': c.DROPOUT_LAYERS,
@@ -988,13 +988,13 @@ def main():
         'shuffle_data': c.SHUFFLE_DATA,
         'steps_per_epoch': c.STEPS_PER_EPOCH,
         'loss_function': c.LOSS_FUNCTION,
-        'early_stopping': c.USE_EARLY_STOPPING,
-        'early_stopping_monitor': c.EARLY_STOPPING_MONITOR,
+        'early_stop': c.USE_EARLY_STOP,
+        'early_stop_monitor': c.EARLY_STOP_MONITOR,
         'monitor_metric': c.MONITOR_METRIC,
         'perplexity': c.USE_PERPLEXITY_METRIC,
-        'train_patience': c.TRAIN_PATIENCE,
-        'early_stopping_mindelta': c.EARLY_STOPPING_MIN_DELTA,
-        'restore_best_weights': c.RESTORE_BEST_WEIGHTS,
+        'train_patience': c.EARLY_STOP_PATIENCE,
+        'early_stop_mindelta': c.EARLY_STOP_MIN_DELTA,
+        'early_stop_best_weights': c.EARLY_STOP_BEST_WEIGHTS,
         'reduce_lr_stuck_factor': c.REDUCE_LR_STUCK_FACTOR,
         'activation_layer': c.ACTIVATION_LAYER,
         'optimizer': c.OPTIMIZER,

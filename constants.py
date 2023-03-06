@@ -46,7 +46,7 @@ STEP_SIZE = 3
 # The number of training examples used in one forward/backward pass of the model.
 BATCH_SIZE = 512
 # The number of iterations over the entire training data set.
-EPOCHS = 1000
+EPOCHS = 2000
 # The rate at which the model updates its weights during training.
 LEARNING_RATE = 0.001
 # The number is unit size of each LSTM layer of the model.
@@ -56,7 +56,7 @@ LSTM_LAYERS = [256, 256]
 # Dropout prevent overfitting. It randomly selected neurons are ignored during training.
 # Add dropout layer after every LSTM layer with chosen value between 0.0-1.0 (0.2 is 20%)
 # Disable dropout layers byt settings it to 0.
-DROPOUT_LAYERS = 0.2
+DROPOUT_LAYERS = 0.5
 # Convolutional is used to perform 1-dimensional convolutional operations on sequential data, such as
 # time series or text data, and is commonly used in tasks such as feature extraction and sequence classification.
 # e.g. [[64, 8], [128, 4]] will create two conv1D layers. First value is filter size and second is kernel size.
@@ -67,16 +67,20 @@ CONVOLUTIONAL_LAYERS = False
 # Keras default dense layer activation is 'linear', other commonly used is 'relu', 'sigmoid', 'softmax'
 # List of all available activations in keras https://keras.io/api/layers/activations/
 # e.g.: 'linear', 'relu', 'softmax'
-DENSE_LAYERS = ['relu']
+DENSE_LAYERS = ['relu', 'relu']
+# Normalizing the inputs of each layer to have zero mean and unit variance. 
+# This helps to prevent the internal covariate shift problem and stabilize the training process.
+# e.g.: True or False
+BATCH_NORMALIZATION = True
 # The embedding layer in deep learning maps the input data into a lower-dimensional vector space where
 # similar words or features are closer to each other.
 # e.g.: 32, 0 = disabled
-EMBEDDING_LAYER = 128
+EMBEDDING_LAYER = 64
 # L1 and L2 regularizers are prevent overfitting. They adding a penalty term to the loss function.
 # L1: Encourages the model to learn sparse patterns, where many of the weights are zero.
 # L2: Encourages the model to learn smaller weights overall, which can help to prevent overfitting.
 # L2 regularization is also known as weight decay, because it causes the weights to decay towards zero over time.
-REGULARIZER_L1 = 0.00001
+REGULARIZER_L1 = 0.000001
 REGULARIZER_L2 = 0.00001
 # Computes the crossentropy loss between the labels and predictions.
 # https://keras.io/api/losses/, https://neptune.ai/blog/keras-loss-functions
@@ -106,7 +110,7 @@ USE_TENSORBOARD = True
 USE_VALIDATION = True
 # Split training data into two parts, one for training and one for evaluating performance.
 # For example, if the value is 0.2, then 20% of the training data will be used for validation.
-VALIDATION_SPLIT = 0.2
+VALIDATION_SPLIT = 0.3
 # Reduce learning rate when a metric has stopped improving. (new_lr = lr * factor.)
 # Set None or 0 to disable this feature
 REDUCE_LR_STUCK_FACTOR = 0.2
@@ -122,19 +126,19 @@ EVALUATE_TEMPERATURES = [0.5, 0.8, 1.0]
 # Early Stopping --------------------------------------------------------------------------------- #
 
 # Stop training when a monitored metric has stopped improving.
-USE_EARLY_STOPPING = True
+USE_EARLY_STOP = True
 # During training, the EarlyStopping callback continuously monitors the quantity
 # Training process stops when it detects that the monitored quantity has stopped improving.
 # e.g.: 'loss', 'accuracy', 'val_loss', 'val_accuracy',
-EARLY_STOPPING_MONITOR = 'accuracy'
+EARLY_STOP_MONITOR = 'accuracy'
 # Restore model weights from the epoch with the best value of the monitored quantity.
 # If False, the model weights obtained at the last step of training are used.
-RESTORE_BEST_WEIGHTS = True
+EARLY_STOP_BEST_WEIGHTS = True
 # Number of epochs with no improvement after which training will be stopped if early stopping is activated.
-TRAIN_PATIENCE = 10
+EARLY_STOP_PATIENCE = 10
 # EarlyStopping with min_delta monitors the change in the monitored metric and stops the training process
 # when the change is less than the specified min_delta value. Default is 0
-EARLY_STOPPING_MIN_DELTA = 0.001
+EARLY_STOP_MIN_DELTA = 0
 # Metric for monitoring the training progress of a model during training. The metric is evaluated on the
 # validation set after each epoch and can be used to determine when to stop training if the performance on
 # the validation set stops improving.
