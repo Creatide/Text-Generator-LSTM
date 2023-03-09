@@ -957,7 +957,7 @@ def main():
     arguments = {
         # Generate Arguments
         'generate': False,
-        'primer': '',
+        'primer': c.PRIMER_TEXT,
         'text_formatting': c.TEXT_FORMATTING,
         'temperature': c.TEMPERATURE,
         'texts_length': c.GENERATE_TEXT_LENGTH,
