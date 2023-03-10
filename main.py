@@ -230,7 +230,7 @@ class TextGenerator:
     def prepare_characters(self):
         if not self.process_status: print('TEXT INFO:')
 
-        if self.arguments['primer'] or self.arguments['generate']:
+        if self.arguments['primer'] and self.arguments['generate']:
             self.primer = self.clean_string(self.arguments['primer'])
             self.text = self.primer
         else:
